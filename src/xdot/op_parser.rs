@@ -193,7 +193,9 @@ fn parse_op_set_style(input: &str) -> IResult<&str, Op> {
 }
 
 fn parse_op_external_image(input: &str) -> IResult<&str, Op> {
-    todo!("parsing of external image op")
+    // TODO: implement
+    use nom::combinator::{cut, fail};
+    tagged("I", cut(fail))(input)
 }
 
 fn parse_op(input: &str) -> IResult<&str, Op> {
