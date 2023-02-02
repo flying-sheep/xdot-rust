@@ -37,7 +37,9 @@ fn main() -> Result<()> {
         .into_iter()
         .flatten()
         .collect::<Vec<_>>();
-    println!("{:?}", shapes);
+    for shape in shapes {
+        dbg!(shape);
+    }
     Ok(())
 }
 
@@ -56,12 +58,13 @@ fn handle_elem(elem: Elem) -> Result<Vec<ShapeDraw>> {
             if !ATTR_NAMES.contains(&attr_name.as_str()) {
                 continue;
             }
+            if let Id::Escaped(ref attr_val_raw) = attr.1 {
+                let attr_val = dot_unescape(attr_val_raw)?;
+                dbg!(&attr_name, &attr_val);
+                let mut new = parse(&attr_val).map_err(|e| Report::msg(e.input.to_owned()))?;
+                shapes.append(&mut new);
+            }
         };
-        if let Id::Escaped(ref attr_val_raw) = attr.1 {
-            let attr_val = dot_unescape(attr_val_raw)?;
-            let mut new = parse(&attr_val).map_err(|e| Report::msg(e.input.to_owned()))?;
-            shapes.append(&mut new);
-        }
     }
     Ok(shapes)
 }
