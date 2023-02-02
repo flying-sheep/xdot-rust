@@ -1,14 +1,14 @@
+use nom::error::Error as NomError;
 use std::cell::RefCell;
-use nom::IResult;
 
 use self::declarative::Pen;
 pub(super) use self::declarative::ShapeDraw;
 
 mod attrs;
-mod shapes;
-mod ops;
-mod op_parser;
 mod declarative;
+mod op_parser;
+mod ops;
+mod shapes;
 
 #[derive(Debug, Default)]
 struct Parser {
@@ -16,13 +16,17 @@ struct Parser {
 }
 
 impl Parser {
-    fn parse(&mut self, spec: &str) -> IResult<&str, Vec<ShapeDraw>> {
+    fn parse(&mut self, input: &str) -> Result<Vec<ShapeDraw>, NomError<&str>> {
+        let ops = op_parser::parse(input)?;
         let this = RefCell::new(self);
+        /*for op in ops {
+
+        }*/
         todo!()
     }
 }
-  
-pub(super) fn parse(spec: &str) -> IResult<&str, Vec<ShapeDraw>> {
-    // Parser::default().parse(spec)
+
+pub(super) fn parse(input: &str) -> Result<Vec<ShapeDraw>, NomError<&str>> {
+    // Parser::default().parse(input)
     todo!()
 }

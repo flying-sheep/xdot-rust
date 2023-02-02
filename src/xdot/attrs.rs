@@ -1,13 +1,22 @@
 ///! Types reused for drawing things.
-
 use bitflags::bitflags;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub(super) struct Rgba {
-    r: u8, g: u8, b: u8, a: u8
+    r: u8,
+    g: u8,
+    b: u8,
+    a: u8,
 }
 impl Default for Rgba {
-    fn default() -> Self { Rgba { r: 0, g: 0, b: 0, a: 0xff } }
+    fn default() -> Self {
+        Rgba {
+            r: 0,
+            g: 0,
+            b: 0,
+            a: 0xff,
+        }
+    }
 }
 
 /// See https://graphviz.org/docs/attr-types/style/
@@ -21,10 +30,12 @@ pub(super) enum Style {
     // TODO: "tapered" for edges only
 }
 impl Default for Style {
-    fn default() -> Self { Style::Solid }
+    fn default() -> Self {
+        Style::Solid
+    }
 }
-    
-bitflags!{
+
+bitflags! {
     /// Matches values in https://graphviz.org/docs/outputs/canon/#xdot
     #[derive(Default)]
     pub(super) struct FontCharacteristics: u128 {

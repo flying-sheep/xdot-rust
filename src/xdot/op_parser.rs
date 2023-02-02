@@ -1,38 +1,53 @@
 ///! Stateless parser extracting xdot operations
+use std::str::FromStr;
 
 use nom::{
-    IResult,
-    bytes::complete::{tag, take_while_m_n},
-    combinator::map_res,
-    sequence::tuple,
+    branch::alt,
+    bytes::complete::tag,
+    character::complete::{char, multispace0, multispace1, one_of},
+    combinator::{map_res, recognize},
+    error::{Error as NomError, ParseError},
+    multi::{many0, many1},
+    sequence::{delimited, preceded, terminated, tuple},
+    Finish, IResult,
 };
 
-use super::ops::Op;
+use super::{attrs::FontCharacteristics, ops::Op};
 
-/*
-fn from_hex(input: &str) -> Result<u8, std::num::ParseIntError> {
-    u8::from_str_radix(input, 16)
+fn decimal(input: &str) -> IResult<&str, &str> {
+    recognize(many1(terminated(one_of("0123456789"), many0(char('_')))))(input)
 }
-  
-fn is_hex_digit(c: char) -> bool {
-    c.is_digit(16)
+
+/// A combinator that takes a parser `inner` and produces a parser that also consumes both leading and
+/// trailing whitespace, returning the output of `inner`.
+fn ws<'a, F, O, E: ParseError<&'a str>>(inner: F) -> impl FnMut(&'a str) -> IResult<&'a str, O, E>
+where
+    F: FnMut(&'a str) -> IResult<&'a str, O, E>,
+{
+    delimited(multispace0, inner, multispace0)
 }
-  
-fn hex_primary(input: &str) -> IResult<&str, u8> {
-    map_res(
-        take_while_m_n(2, 2, is_hex_digit),
-        from_hex
+
+fn parse_op_draw_shape(input: &str) -> IResult<&str, Op> {
+    todo!()
+}
+
+fn parse_op_set_font_characteristics(input: &str) -> IResult<&str, Op> {
+    preceded(
+        tuple((tag("t"), multispace1)),
+        map_res(decimal, |value| {
+            u128::from_str(value).map(|n| FontCharacteristics::from_bits_truncate(n).into())
+        }),
     )(input)
 }
-  
-fn hex_color(input: &str) -> IResult<&str, Color> {
-    let (input, _) = tag("#")(input)?;
-    let (input, (red, green, blue)) = tuple((hex_primary, hex_primary, hex_primary))(input)?;
-  
-    Ok((input, Color { red, green, blue }))
-}
-*/
 
-pub(super) fn parse(spec: &str) -> IResult<&str, Vec<Op>> {
-    todo!()
+fn parse_op(input: &str) -> IResult<&str, Op> {
+    alt((
+        ws(parse_op_draw_shape),
+        ws(parse_op_set_font_characteristics),
+    ))(input)
+}
+
+pub(super) fn parse(input: &str) -> Result<Vec<Op>, NomError<&str>> {
+    // TODO: what to do instead of swallowing rest?
+    many0(parse_op)(input).finish().map(|(_rest, ops)| ops)
 }
