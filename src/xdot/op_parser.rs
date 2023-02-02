@@ -230,7 +230,7 @@ fn test_parse_op_draw_shape_ellipse() {
         Ok((
             "",
             Ellipse {
-                filled: true,
+                filled: false,
                 x: 27.,
                 y: 90.,
                 w: 27.,
