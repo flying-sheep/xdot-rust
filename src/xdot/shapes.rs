@@ -38,18 +38,18 @@ impl Into<Shape> for Points {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub(super) enum TextAlign {
+pub(crate) enum TextAlign {
     Left,
     Center,
     Right,
 }
 #[derive(Debug, Clone, PartialEq)]
 pub(crate) struct Text {
-    x: f32,
-    y: f32,
-    align: TextAlign,
-    width: f32,
-    text: String,
+    pub x: f32,
+    pub y: f32,
+    pub align: TextAlign,
+    pub width: f32,
+    pub text: String,
 }
 impl Into<Shape> for Text {
     fn into(self) -> Shape {

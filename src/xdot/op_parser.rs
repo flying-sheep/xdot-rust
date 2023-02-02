@@ -4,9 +4,9 @@ use std::str::FromStr;
 
 use nom::{
     branch::alt,
-    bytes::complete::tag,
+    bytes::complete::{tag, take},
     character::complete::{char, multispace0, multispace1, one_of},
-    combinator::{flat_map, map, map_res, recognize},
+    combinator::{flat_map, map, map_res, recognize, value},
     error::{Error as NomError, ParseError},
     multi::{count, many0, many1, separated_list0},
     number::complete::float,
@@ -17,7 +17,7 @@ use nom::{
 use super::{
     attrs::FontCharacteristics,
     ops::Op,
-    shapes::{Ellipse, Points, PointsType},
+    shapes::{Ellipse, Points, PointsType, Text, TextAlign},
 };
 
 // Combinators
@@ -82,8 +82,43 @@ fn parse_op_draw_shape_points(input: &str) -> IResult<&str, Op> {
         },
     )(input)
 }
+/// Parse xdot’s “n -b₁b₂...bₙ” pattern
+fn parse_string(input: &str) -> IResult<&str, &str> {
+    // TODO: take bytes, not chars
+    flat_map(map_res(decimal, usize::from_str), |n| {
+        preceded(tuple((multispace1, tag("-"))), take(n))
+    })(input)
+}
+fn parse_text_align(input: &str) -> IResult<&str, TextAlign> {
+    alt((
+        value(TextAlign::Left, tag("-1")),
+        value(TextAlign::Center, tag("0")),
+        value(TextAlign::Right, tag("1")),
+    ))(input)
+}
 fn parse_op_draw_shape_text(input: &str) -> IResult<&str, Op> {
-    todo!("parsing of text draw op")
+    preceded(
+        tuple((tag("T"), multispace1)),
+        map(
+            tuple((
+                terminated(float, multispace1),            // x
+                terminated(float, multispace1),            // y
+                terminated(parse_text_align, multispace1), // align
+                terminated(float, multispace1),            // width
+                parse_string,
+            )),
+            |(x, y, align, width, text)| {
+                Text {
+                    x,
+                    y,
+                    align,
+                    width,
+                    text: text.to_owned(),
+                }
+                .into()
+            },
+        ),
+    )(input)
 }
 fn parse_op_draw_shape(input: &str) -> IResult<&str, Op> {
     alt((
