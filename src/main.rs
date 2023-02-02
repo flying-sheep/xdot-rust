@@ -28,6 +28,7 @@ fn main() -> Result<()> {
             CommandArg::Format(Format::Xdot),
         ],
     )?;
+    println!("{}", &layed_out);
     let graph = gv::parse(&layed_out).map_err(Report::msg)?;
     graph.iter_elems().map(handle_elem).collect::<Result<_>>()?;
     Ok(())

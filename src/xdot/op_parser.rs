@@ -8,16 +8,16 @@ use nom::{
     character::complete::{char, multispace0, multispace1, one_of},
     combinator::{flat_map, map, map_res, recognize},
     error::{Error as NomError, ParseError},
-    multi::{count, many0, many1},
+    multi::{count, many0, many1, separated_list0},
     number::complete::float,
-    sequence::{delimited, preceded, terminated, tuple},
+    sequence::{delimited, preceded, separated_pair, terminated, tuple},
     Finish, IResult,
 };
 
 use super::{
     attrs::FontCharacteristics,
     ops::Op,
-    shapes::{Points, PointsType},
+    shapes::{Ellipse, Points, PointsType},
 };
 
 // Combinators
@@ -38,7 +38,23 @@ where
 // Op parsers
 
 fn parse_op_draw_shape_ellipse(input: &str) -> IResult<&str, Op> {
-    todo!("parsing of ellipse draw op")
+    map(
+        separated_pair(
+            one_of("Ee"),
+            multispace1,
+            tuple((float, float, float, float)),
+        ),
+        |(c, (x, y, w, h))| {
+            Ellipse {
+                filled: c == 'E',
+                x,
+                y,
+                w,
+                h,
+            }
+            .into()
+        },
+    )(input)
 }
 fn parse_op_draw_shape_points(input: &str) -> IResult<&str, Op> {
     map(
@@ -102,17 +118,19 @@ fn parse_op_external_image(input: &str) -> IResult<&str, Op> {
 
 fn parse_op(input: &str) -> IResult<&str, Op> {
     alt((
-        ws(parse_op_draw_shape),
-        ws(parse_op_set_font_characteristics),
-        ws(parse_op_set_fill_color),
-        ws(parse_op_set_pen_color),
-        ws(parse_op_set_font),
-        ws(parse_op_set_style),
-        ws(parse_op_external_image),
+        parse_op_draw_shape,
+        parse_op_set_font_characteristics,
+        parse_op_set_fill_color,
+        parse_op_set_pen_color,
+        parse_op_set_font,
+        parse_op_set_style,
+        parse_op_external_image,
     ))(input)
 }
 
 pub(super) fn parse(input: &str) -> Result<Vec<Op>, NomError<&str>> {
     // TODO: what to do instead of swallowing rest?
-    many0(parse_op)(input).finish().map(|(_rest, ops)| ops)
+    ws(separated_list0(multispace1, parse_op))(input)
+        .finish()
+        .map(|(_rest, ops)| ops)
 }

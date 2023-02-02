@@ -7,11 +7,11 @@ pub(crate) enum Shape {
 
 #[derive(Debug, Clone, PartialEq)]
 pub(crate) struct Ellipse {
-    filled: bool,
-    x: f32,
-    y: f32,
-    w: f32,
-    h: f32,
+    pub filled: bool,
+    pub x: f32,
+    pub y: f32,
+    pub w: f32,
+    pub h: f32,
 }
 impl Into<Shape> for Ellipse {
     fn into(self) -> Shape {
