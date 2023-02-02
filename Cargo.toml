@@ -1,0 +1,12 @@
+[package]
+name = 'gvtest'
+version = '0.1.0'
+edition = '2021'
+
+[dependencies]
+bitflags = "1.3.2"
+color-eyre = '0.6.2'
+graphviz-rust = { version = '0.5.2', git = 'https://github.com/flying-sheep/graphviz-rust.git', branch = 'fix-parser' }
+nom = "7.1.3"
+pest = "2.5.4"
+pest_derive = "2.5.4"
