@@ -6,7 +6,7 @@ use nom::{
     branch::alt,
     bytes::complete::{tag, take, take_while_m_n},
     character::complete::{char, multispace0, multispace1, one_of},
-    combinator::{complete, flat_map, map, map_parser, map_res, recognize, value},
+    combinator::{eof, flat_map, map, map_parser, map_res, recognize, value},
     error::{Error as NomError, ParseError},
     multi::{count, many0, many1, separated_list1},
     number::complete::float,
@@ -213,7 +213,10 @@ fn parse_op(input: &str) -> IResult<&str, Op> {
 }
 
 pub(super) fn parse(input: &str) -> Result<Vec<Op>, NomError<&str>> {
-    complete(ws(separated_list1(multispace1, parse_op)))(input)
+    terminated(ws(separated_list1(multispace1, parse_op)), eof)(input)
         .finish()
-        .map(|(_rest, ops)| ops)
+        .map(|(rest, ops)| {
+            assert_eq!(rest, "");
+            ops
+        })
 }

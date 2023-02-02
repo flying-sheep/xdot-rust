@@ -1,6 +1,6 @@
 use color_eyre::{
     self,
-    eyre::{bail, Report, Result},
+    eyre::{Report, Result},
 };
 use graph_ext::{Elem, GraphExt};
 use graphviz_rust as gv;
@@ -64,7 +64,7 @@ fn handle_elem(elem: Elem) -> Result<Vec<ShapeDraw>> {
                 let mut new = parse(&attr_val).map_err(|e| Report::msg(e.input.to_owned()))?;
                 shapes.append(&mut new);
             }
-        };
+        }
     }
     Ok(shapes)
 }
@@ -72,26 +72,27 @@ fn handle_elem(elem: Elem) -> Result<Vec<ShapeDraw>> {
 fn dot_unescape(input: &str) -> Result<String> {
     // TODO: dedupe error conversion, throw better error if input is not empty
     let (input, s) = dot_unescape_inner(input).map_err(|e| Report::msg(e.to_owned()))?;
-    if input != "" {
-        bail!("Remaining input: {}", input);
-    }
+    assert_eq!(input, "");
     Ok(s.to_owned())
 }
 
 fn dot_unescape_inner<'a>(input: &'a str) -> nom::IResult<&'a str, &'a str> {
     use nom::{
         bytes::complete::{tag, take_while},
-        sequence::delimited,
+        combinator::eof,
+        sequence::{delimited, terminated},
     };
     // TODO: actually unescape
-    delimited(tag("\""), take_while(|c| c != '\\' && c != '\"'), tag("\""))(input)
+    terminated(
+        delimited(tag("\""), take_while(|c| c != '\\' && c != '\"'), tag("\"")),
+        eof,
+    )(input)
 }
 
 #[test]
 fn test_dot_unescape() {
     assert_eq!(dot_unescape_inner("\"\""), Ok(("", "")));
     assert_eq!(dot_unescape_inner("\"xy\""), Ok(("", "xy")));
+    assert!(dot_unescape_inner("\"\"\"").is_err());
     assert!(dot_unescape_inner("\"\\\"").is_err()); // so far no actual escape support
-    assert_eq!(dot_unescape_inner("\"\"\""), Ok(("\"", "")));
-    assert!(dot_unescape("\"\"\"").is_err()); // the inner one doesn’t test if things are complete
 }
