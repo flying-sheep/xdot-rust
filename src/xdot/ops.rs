@@ -46,3 +46,9 @@ impl Into<Op> for FontCharacteristics {
         Op::SetFontCharacteristics(self)
     }
 }
+
+impl Into<Op> for Style {
+    fn into(self) -> Op {
+        Op::SetStyle(self)
+    }
+}

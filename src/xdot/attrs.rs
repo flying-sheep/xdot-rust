@@ -1,3 +1,5 @@
+use std::str::FromStr;
+
 ///! Types reused for drawing things.
 use bitflags::bitflags;
 
@@ -32,6 +34,20 @@ pub(crate) enum Style {
 impl Default for Style {
     fn default() -> Self {
         Style::Solid
+    }
+}
+impl FromStr for Style {
+    type Err = String;
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        use Style::*;
+        Ok(match s {
+            "dashed" => Dashed,
+            "dotted" => Dotted,
+            "solid" => Solid,
+            "invis" => Invis,
+            "bold" => Bold,
+            s => return Err(s.to_owned()),
+        })
     }
 }
 

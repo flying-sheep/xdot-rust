@@ -15,7 +15,7 @@ use nom::{
 };
 
 use super::{
-    attrs::{FontCharacteristics, Rgba},
+    attrs::{FontCharacteristics, Rgba, Style},
     ops::Op,
     shapes::{Ellipse, Points, PointsType, Text, TextAlign},
 };
@@ -188,7 +188,8 @@ fn parse_op_set_font(input: &str) -> IResult<&str, Op> {
 }
 
 fn parse_op_set_style(input: &str) -> IResult<&str, Op> {
-    todo!("parsing of style set op")
+    let (input, style) = tagged("S", map_res(parse_string, Style::from_str))(input)?;
+    Ok((input, style.into()))
 }
 
 fn parse_op_external_image(input: &str) -> IResult<&str, Op> {
