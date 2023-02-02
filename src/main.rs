@@ -9,7 +9,7 @@ use gv::{
     dot_structures::{Attribute, Id},
     printer::PrinterContext,
 };
-use xdot::parse;
+use xdot::{parse, ShapeDraw};
 
 mod graph_ext;
 mod xdot;
@@ -30,7 +30,14 @@ fn main() -> Result<()> {
     )?;
     // println!("{}", &layed_out);
     let graph = gv::parse(&layed_out).map_err(Report::msg)?;
-    graph.iter_elems().map(handle_elem).collect::<Result<_>>()?;
+    let shapes = graph
+        .iter_elems()
+        .map(handle_elem)
+        .collect::<Result<Vec<_>>>()?
+        .into_iter()
+        .flatten()
+        .collect::<Vec<_>>();
+    println!("{:?}", shapes);
     Ok(())
 }
 
@@ -38,11 +45,12 @@ const ATTR_NAMES: [&'static str; 6] = [
     "_draw_", "_ldraw_", "_hdraw_", "_tdraw_", "_hldraw_", "_tldraw_",
 ];
 
-fn handle_elem(elem: Elem) -> Result<()> {
+fn handle_elem(elem: Elem) -> Result<Vec<ShapeDraw>> {
     let attributes: &[Attribute] = match elem {
         Elem::Edge(edge) => edge.attributes.as_ref(),
         Elem::Node(node) => node.attributes.as_ref(),
     };
+    let mut shapes = vec![];
     for attr in attributes.iter() {
         if let Id::Plain(ref attr_name) = attr.0 {
             if !ATTR_NAMES.contains(&attr_name.as_str()) {
@@ -51,11 +59,11 @@ fn handle_elem(elem: Elem) -> Result<()> {
         };
         if let Id::Escaped(ref attr_val_raw) = attr.1 {
             let attr_val = dot_unescape(attr_val_raw)?;
-            let shapes = parse(&attr_val).map_err(|e| Report::msg(e.input.to_owned()))?;
-            dbg!(attr_val, shapes);
+            let mut new = parse(&attr_val).map_err(|e| Report::msg(e.input.to_owned()))?;
+            shapes.append(&mut new);
         }
     }
-    Ok(())
+    Ok(shapes)
 }
 
 fn dot_unescape(input: &str) -> Result<String> {
