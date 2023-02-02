@@ -8,11 +8,13 @@ use nom::{
     character::complete::{char, multispace0, multispace1, one_of},
     combinator::{complete, flat_map, map, map_parser, map_res, recognize, value},
     error::{Error as NomError, ParseError},
-    multi::{count, many0, many1, separated_list0},
+    multi::{count, many0, many1, separated_list1},
     number::complete::float,
     sequence::{delimited, preceded, separated_pair, terminated, tuple},
     Finish, IResult,
 };
+
+use crate::xdot::shapes::ExternalImage;
 
 use super::{
     attrs::{FontCharacteristics, Rgba, Style},
@@ -195,7 +197,7 @@ fn parse_op_set_style(input: &str) -> IResult<&str, Op> {
 fn parse_op_external_image(input: &str) -> IResult<&str, Op> {
     // TODO: implement
     use nom::combinator::{cut, fail};
-    tagged("I", cut(fail))(input)
+    map(tagged("I", cut(fail)), |_: ()| ExternalImage.into())(input)
 }
 
 fn parse_op(input: &str) -> IResult<&str, Op> {
@@ -211,7 +213,7 @@ fn parse_op(input: &str) -> IResult<&str, Op> {
 }
 
 pub(super) fn parse(input: &str) -> Result<Vec<Op>, NomError<&str>> {
-    complete(ws(separated_list0(multispace1, parse_op)))(input)
+    complete(ws(separated_list1(multispace1, parse_op)))(input)
         .finish()
         .map(|(_rest, ops)| ops)
 }

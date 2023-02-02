@@ -28,7 +28,7 @@ fn main() -> Result<()> {
             CommandArg::Format(Format::Xdot),
         ],
     )?;
-    println!("{}", &layed_out);
+    // println!("{}", &layed_out);
     let graph = gv::parse(&layed_out).map_err(Report::msg)?;
     graph.iter_elems().map(handle_elem).collect::<Result<_>>()?;
     Ok(())
@@ -50,7 +50,8 @@ fn handle_elem(elem: Elem) -> Result<()> {
             }
         };
         if let Id::Escaped(ref attr_val) = attr.1 {
-            parse(&attr_val).map_err(|e| Report::msg(e.input.to_owned()))?;
+            let shapes = parse(&attr_val).map_err(|e| Report::msg(e.input.to_owned()))?;
+            dbg!(attr_val, shapes);
         }
     }
     Ok(())

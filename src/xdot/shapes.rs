@@ -56,3 +56,6 @@ impl Into<Shape> for Text {
         Shape::Text(self)
     }
 }
+
+#[derive(Debug, Clone, Copy, Hash, PartialEq, Eq, PartialOrd, Ord)]
+pub(crate) struct ExternalImage;

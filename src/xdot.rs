@@ -14,10 +14,11 @@ pub(super) fn parse<'a>(input: &'a str) -> Result<Vec<ShapeDraw>, NomError<&'a s
     let mut pen = Pen::default();
     let mut shape_draws = vec![];
     for op in op_parser::parse(input)? {
+        dbg!(&op);
         match op {
             DrawShape(shape) => shape_draws.push(ShapeDraw {
                 pen: pen.clone(),
-                shape: shape,
+                shape,
             }),
             SetFontCharacteristics(fc) => pen.font_characteristics = fc,
             SetFillColor(color) => pen.fill_color = color,
