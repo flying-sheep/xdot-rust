@@ -1,5 +1,4 @@
 use nom::error::Error as NomError;
-use std::cell::RefCell;
 
 use self::declarative::Pen;
 pub(super) use self::declarative::ShapeDraw;
@@ -28,7 +27,7 @@ pub(super) fn parse<'a>(input: &'a str) -> Result<Vec<ShapeDraw>, NomError<&'a s
                 pen.font_name = name;
             }
             SetStyle(style) => pen.line_style = style,
-            ExternalImage(_) => todo!(),
+            ExternalImage(_) => todo!("conversion of external image op"),
         }
     }
     Ok(shape_draws)

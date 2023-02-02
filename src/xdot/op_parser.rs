@@ -1,18 +1,26 @@
-///! Stateless parser extracting xdot operations
+///! Stateless parser extracting xdot operations.
+///! See https://graphviz.org/docs/outputs/canon/#xdot
 use std::str::FromStr;
 
 use nom::{
     branch::alt,
     bytes::complete::tag,
     character::complete::{char, multispace0, multispace1, one_of},
-    combinator::{map_res, recognize},
+    combinator::{flat_map, map, map_res, recognize},
     error::{Error as NomError, ParseError},
-    multi::{many0, many1},
+    multi::{count, many0, many1},
+    number::complete::float,
     sequence::{delimited, preceded, terminated, tuple},
     Finish, IResult,
 };
 
-use super::{attrs::FontCharacteristics, ops::Op};
+use super::{
+    attrs::FontCharacteristics,
+    ops::Op,
+    shapes::{Points, PointsType},
+};
+
+// Combinators
 
 fn decimal(input: &str) -> IResult<&str, &str> {
     recognize(many1(terminated(one_of("0123456789"), many0(char('_')))))(input)
@@ -27,8 +35,46 @@ where
     delimited(multispace0, inner, multispace0)
 }
 
+// Op parsers
+
+fn parse_op_draw_shape_ellipse(input: &str) -> IResult<&str, Op> {
+    todo!("parsing of ellipse draw op")
+}
+fn parse_op_draw_shape_points(input: &str) -> IResult<&str, Op> {
+    map(
+        tuple((
+            one_of("PpLBb"),
+            flat_map(map_res(decimal, usize::from_str), |n| {
+                count(
+                    tuple((preceded(multispace1, float), preceded(multispace1, float))),
+                    n,
+                )
+            }),
+        )),
+        |(c, points)| -> Op {
+            Points {
+                filled: c == 'P' || c == 'b',
+                typ: match c {
+                    'P' | 'p' => PointsType::Polygon,
+                    'L' => PointsType::Polyline,
+                    'B' | 'b' => PointsType::BSpline,
+                    _ => unreachable!(),
+                },
+                points,
+            }
+            .into()
+        },
+    )(input)
+}
+fn parse_op_draw_shape_text(input: &str) -> IResult<&str, Op> {
+    todo!("parsing of text draw op")
+}
 fn parse_op_draw_shape(input: &str) -> IResult<&str, Op> {
-    todo!()
+    alt((
+        parse_op_draw_shape_ellipse,
+        parse_op_draw_shape_points,
+        parse_op_draw_shape_text,
+    ))(input)
 }
 fn parse_op_set_font_characteristics(input: &str) -> IResult<&str, Op> {
     preceded(
@@ -39,19 +85,19 @@ fn parse_op_set_font_characteristics(input: &str) -> IResult<&str, Op> {
     )(input)
 }
 fn parse_op_set_fill_color(input: &str) -> IResult<&str, Op> {
-    todo!()
+    todo!("parsing of fill color set op")
 }
 fn parse_op_set_pen_color(input: &str) -> IResult<&str, Op> {
-    todo!()
+    todo!("parsing of pen color set op")
 }
 fn parse_op_set_font(input: &str) -> IResult<&str, Op> {
-    todo!()
+    todo!("parsing of font set op")
 }
 fn parse_op_set_style(input: &str) -> IResult<&str, Op> {
-    todo!()
+    todo!("parsing of style set op")
 }
 fn parse_op_external_image(input: &str) -> IResult<&str, Op> {
-    todo!()
+    todo!("parsing of external image op")
 }
 
 fn parse_op(input: &str) -> IResult<&str, Op> {

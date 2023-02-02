@@ -20,16 +20,16 @@ impl Into<Shape> for Ellipse {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub(super) enum PointsType {
+pub(crate) enum PointsType {
     Polygon,
     Polyline,
     BSpline,
 }
 #[derive(Debug, Clone, PartialEq)]
 pub(crate) struct Points {
-    filled: bool,
-    typ: PointsType,
-    points: Vec<(f32, f32)>,
+    pub filled: bool,
+    pub typ: PointsType,
+    pub points: Vec<(f32, f32)>,
 }
 impl Into<Shape> for Points {
     fn into(self) -> Shape {
