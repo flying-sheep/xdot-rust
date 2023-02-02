@@ -6,7 +6,7 @@ use nom::{
     branch::alt,
     bytes::complete::{tag, take, take_while_m_n},
     character::complete::{char, multispace0, multispace1, one_of},
-    combinator::{flat_map, map, map_parser, map_res, recognize, value},
+    combinator::{complete, flat_map, map, map_parser, map_res, recognize, value},
     error::{Error as NomError, ParseError},
     multi::{count, many0, many1, separated_list0},
     number::complete::float,
@@ -33,6 +33,16 @@ where
     F: FnMut(&'a str) -> IResult<&'a str, O, E>,
 {
     delimited(multispace0, inner, multispace0)
+}
+
+fn tagged<'a, F, O, E: ParseError<&'a str>>(
+    t: &'static str,
+    inner: F,
+) -> impl FnMut(&'a str) -> IResult<&'a str, O, E>
+where
+    F: FnMut(&'a str) -> IResult<&'a str, O, E>,
+{
+    preceded(tuple((tag(t), multispace1)), inner)
 }
 
 // Data type parsers
@@ -113,8 +123,8 @@ fn parse_op_draw_shape_points(input: &str) -> IResult<&str, Op> {
 }
 
 fn parse_op_draw_shape_text(input: &str) -> IResult<&str, Op> {
-    let (input, (x, y, align, width, text)) = preceded(
-        tuple((tag("T"), multispace1)),
+    let (input, (x, y, align, width, text)) = tagged(
+        "T",
         tuple((
             terminated(float, multispace1),            // x
             terminated(float, multispace1),            // y
@@ -142,8 +152,8 @@ fn parse_op_draw_shape(input: &str) -> IResult<&str, Op> {
 }
 
 fn parse_op_set_font_characteristics(input: &str) -> IResult<&str, Op> {
-    preceded(
-        tuple((tag("t"), multispace1)),
+    tagged(
+        "t",
         map_res(decimal, |value| {
             u128::from_str(value).map(|n| FontCharacteristics::from_bits_truncate(n).into())
         }),
@@ -154,13 +164,7 @@ fn parse_op_set_color<'a>(
     t: &'static str,
     op: impl FnMut(Rgba) -> Op,
 ) -> impl FnMut(&'a str) -> IResult<&'a str, Op> {
-    map(
-        preceded(
-            tuple((tag(t), multispace1)),
-            map_parser(parse_string, hex_color),
-        ),
-        op,
-    )
+    map(tagged(t, map_parser(parse_string, hex_color)), op)
 }
 
 fn parse_op_set_fill_color(input: &str) -> IResult<&str, Op> {
@@ -172,7 +176,15 @@ fn parse_op_set_pen_color(input: &str) -> IResult<&str, Op> {
 }
 
 fn parse_op_set_font(input: &str) -> IResult<&str, Op> {
-    todo!("parsing of font set op")
+    let (input, (size, name)) =
+        tagged("F", separated_pair(float, multispace1, parse_string))(input)?;
+    Ok((
+        input,
+        Op::SetFont {
+            size,
+            name: name.to_owned(),
+        },
+    ))
 }
 
 fn parse_op_set_style(input: &str) -> IResult<&str, Op> {
@@ -196,8 +208,7 @@ fn parse_op(input: &str) -> IResult<&str, Op> {
 }
 
 pub(super) fn parse(input: &str) -> Result<Vec<Op>, NomError<&str>> {
-    // TODO: what to do instead of swallowing rest?
-    ws(separated_list0(multispace1, parse_op))(input)
+    complete(ws(separated_list0(multispace1, parse_op)))(input)
         .finish()
         .map(|(_rest, ops)| ops)
 }
