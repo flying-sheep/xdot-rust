@@ -2,14 +2,14 @@ use super::{attrs::*, shapes::Shape};
 
 /// Store pen attributes.
 #[derive(Debug, Clone, PartialEq)]
-pub(super) struct Pen {
-    color: Rgba,
-    fill_color: Rgba,
-    line_width: f32,
-    line_style: Style,
-    font_size: f32,
-    font_name: String,
-    font_characteristics: FontCharacteristics,
+pub(crate) struct Pen {
+    pub color: Rgba,
+    pub fill_color: Rgba,
+    pub line_width: f32,
+    pub line_style: Style,
+    pub font_size: f32,
+    pub font_name: String,
+    pub font_characteristics: FontCharacteristics,
 }
 impl Default for Pen {
     fn default() -> Self {
@@ -27,6 +27,6 @@ impl Default for Pen {
 
 #[derive(Debug, Clone, PartialEq)]
 pub(crate) struct ShapeDraw {
-    pen: Pen,
-    desc: Shape,
+    pub pen: Pen,
+    pub shape: Shape,
 }

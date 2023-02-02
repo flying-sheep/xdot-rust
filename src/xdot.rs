@@ -10,23 +10,26 @@ mod op_parser;
 mod ops;
 mod shapes;
 
-#[derive(Debug, Default)]
-struct Parser {
-    pen: Pen,
-}
-
-impl Parser {
-    fn parse(&mut self, input: &str) -> Result<Vec<ShapeDraw>, NomError<&str>> {
-        let ops = op_parser::parse(input)?;
-        let this = RefCell::new(self);
-        /*for op in ops {
-
-        }*/
-        todo!()
+pub(super) fn parse<'a>(input: &'a str) -> Result<Vec<ShapeDraw>, NomError<&'a str>> {
+    use ops::Op::*;
+    let mut pen = Pen::default();
+    let mut shape_draws = vec![];
+    for op in op_parser::parse(input)? {
+        match op {
+            DrawShape(shape) => shape_draws.push(ShapeDraw {
+                pen: pen.clone(),
+                shape: shape,
+            }),
+            SetFontCharacteristics(fc) => pen.font_characteristics = fc,
+            SetFillColor(color) => pen.fill_color = color,
+            SetPenColor(color) => pen.color = color,
+            SetFont { size, name } => {
+                pen.font_size = size;
+                pen.font_name = name;
+            }
+            SetStyle(style) => pen.line_style = style,
+            ExternalImage(_) => todo!(),
+        }
     }
-}
-
-pub(super) fn parse(input: &str) -> Result<Vec<ShapeDraw>, NomError<&str>> {
-    // Parser::default().parse(input)
-    todo!()
+    Ok(shape_draws)
 }

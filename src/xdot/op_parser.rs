@@ -30,7 +30,6 @@ where
 fn parse_op_draw_shape(input: &str) -> IResult<&str, Op> {
     todo!()
 }
-
 fn parse_op_set_font_characteristics(input: &str) -> IResult<&str, Op> {
     preceded(
         tuple((tag("t"), multispace1)),
@@ -39,11 +38,31 @@ fn parse_op_set_font_characteristics(input: &str) -> IResult<&str, Op> {
         }),
     )(input)
 }
+fn parse_op_set_fill_color(input: &str) -> IResult<&str, Op> {
+    todo!()
+}
+fn parse_op_set_pen_color(input: &str) -> IResult<&str, Op> {
+    todo!()
+}
+fn parse_op_set_font(input: &str) -> IResult<&str, Op> {
+    todo!()
+}
+fn parse_op_set_style(input: &str) -> IResult<&str, Op> {
+    todo!()
+}
+fn parse_op_external_image(input: &str) -> IResult<&str, Op> {
+    todo!()
+}
 
 fn parse_op(input: &str) -> IResult<&str, Op> {
     alt((
         ws(parse_op_draw_shape),
         ws(parse_op_set_font_characteristics),
+        ws(parse_op_set_fill_color),
+        ws(parse_op_set_pen_color),
+        ws(parse_op_set_font),
+        ws(parse_op_set_style),
+        ws(parse_op_external_image),
     ))(input)
 }
 

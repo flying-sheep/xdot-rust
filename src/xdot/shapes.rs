@@ -1,12 +1,12 @@
 #[derive(Debug, Clone, PartialEq)]
-pub(super) enum Shape {
+pub(crate) enum Shape {
     Ellipse(Ellipse),
     Points(Points),
     Text(Text),
 }
 
 #[derive(Debug, Clone, PartialEq)]
-pub(super) struct Ellipse {
+pub(crate) struct Ellipse {
     filled: bool,
     x: f32,
     y: f32,
@@ -26,7 +26,7 @@ pub(super) enum PointsType {
     BSpline,
 }
 #[derive(Debug, Clone, PartialEq)]
-pub(super) struct Points {
+pub(crate) struct Points {
     filled: bool,
     typ: PointsType,
     points: Vec<(f32, f32)>,
@@ -44,7 +44,7 @@ pub(super) enum TextAlign {
     Right,
 }
 #[derive(Debug, Clone, PartialEq)]
-pub(super) struct Text {
+pub(crate) struct Text {
     x: f32,
     y: f32,
     align: TextAlign,

@@ -2,7 +2,7 @@
 use bitflags::bitflags;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub(super) struct Rgba {
+pub(crate) struct Rgba {
     r: u8,
     g: u8,
     b: u8,
@@ -21,7 +21,7 @@ impl Default for Rgba {
 
 /// See https://graphviz.org/docs/attr-types/style/
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub(super) enum Style {
+pub(crate) enum Style {
     Dashed,
     Dotted,
     Solid,
@@ -38,7 +38,7 @@ impl Default for Style {
 bitflags! {
     /// Matches values in https://graphviz.org/docs/outputs/canon/#xdot
     #[derive(Default)]
-    pub(super) struct FontCharacteristics: u128 {
+    pub(crate) struct FontCharacteristics: u128 {
         const BOLD           = 0b00000001;
         const ITALIC         = 0b00000010;
         const UNDERLINE      = 0b00000100;
