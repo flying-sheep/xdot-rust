@@ -105,7 +105,7 @@ fn parse_op_draw_shape_ellipse(input: &str) -> IResult<&str, Op> {
 
 fn parse_op_draw_shape_points(input: &str) -> IResult<&str, Op> {
     let (input, (c, points)) = tuple((
-        one_of("PpLBb"),
+        terminated(one_of("PpLBb"), multispace1),
         flat_map(map_res(decimal, usize::from_str), |n| {
             count(
                 tuple((preceded(multispace1, float), preceded(multispace1, float))),
@@ -224,7 +224,7 @@ pub(super) fn parse(input: &str) -> Result<Vec<Op>, NomError<&str>> {
 }
 
 #[test]
-fn test_parse_op_draw_shape_ellipse() {
+fn test_ellipse() {
     assert_eq!(
         parse_op_draw_shape_ellipse("e 27 90 27 18"),
         Ok((
@@ -235,6 +235,22 @@ fn test_parse_op_draw_shape_ellipse() {
                 y: 90.,
                 w: 27.,
                 h: 18.,
+            }
+            .into()
+        ))
+    )
+}
+
+#[test]
+fn test_b_spline() {
+    assert_eq!(
+        parse_op_draw_shape_points("B 4 27 71.7 27 60.85 27 46.92 27 36.1"),
+        Ok((
+            "",
+            Points {
+                filled: false,
+                typ: PointsType::BSpline,
+                points: vec![(27., 71.7), (27., 60.85), (27., 46.92), (27., 36.1)]
             }
             .into()
         ))
