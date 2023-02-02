@@ -86,11 +86,13 @@ fn hex_color(input: &str) -> IResult<&str, Rgba> {
 // Op parsers
 
 fn parse_op_draw_shape_ellipse(input: &str) -> IResult<&str, Op> {
-    let (input, (c, (x, y, w, h))) = separated_pair(
+    let (input, (c, x, y, w, h)) = tuple((
         one_of("Ee"),
-        multispace1,
-        tuple((float, float, float, float)),
-    )(input)?;
+        preceded(multispace1, float),
+        preceded(multispace1, float),
+        preceded(multispace1, float),
+        preceded(multispace1, float),
+    ))(input)?;
     let ellip = Ellipse {
         filled: c == 'E',
         x,
@@ -219,4 +221,22 @@ pub(super) fn parse(input: &str) -> Result<Vec<Op>, NomError<&str>> {
             assert_eq!(rest, "");
             ops
         })
+}
+
+#[test]
+fn test_parse_op_draw_shape_ellipse() {
+    assert_eq!(
+        parse_op_draw_shape_ellipse("e 27 90 27 18"),
+        Ok((
+            "",
+            Ellipse {
+                filled: true,
+                x: 27.,
+                y: 90.,
+                w: 27.,
+                h: 18.,
+            }
+            .into()
+        ))
+    )
 }
