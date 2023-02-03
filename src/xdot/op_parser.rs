@@ -1,5 +1,5 @@
-///! Stateless parser extracting xdot operations.
-///! See https://graphviz.org/docs/outputs/canon/#xdot
+//! Stateless parser extracting `xdot` operations.
+//! See the [syntax documentation](https://graphviz.org/docs/outputs/canon/#xdot) for details.
 use std::str::FromStr;
 
 use nom::{

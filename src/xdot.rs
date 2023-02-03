@@ -4,11 +4,10 @@ mod attrs;
 mod declarative;
 mod op_parser;
 mod ops;
-mod shapes;
+pub mod shapes;
 
 pub use self::attrs::{FontCharacteristics, Rgba, Style};
 pub use self::declarative::{Pen, ShapeDraw};
-pub use self::shapes::{Ellipse, ExternalImage, Points, PointsType, Shape, Text, TextAlign};
 
 /// Parse an `xdot` draw attribute (as defined [here](https://graphviz.org/docs/outputs/canon/#xdot)).
 /// Returns a vector of stateless drawing operations defining shape and style of the drawn node, edge, or label.

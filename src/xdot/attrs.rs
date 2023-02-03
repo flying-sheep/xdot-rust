@@ -1,4 +1,4 @@
-///! Types reused for drawing things.
+//! Types reused for drawing things.
 use std::str::FromStr;
 
 use bitflags::bitflags;

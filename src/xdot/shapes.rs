@@ -1,3 +1,5 @@
+//! Drawable shapes included in [Shape].
+
 /// A drawable shape including closed shapes, lines, and text.
 #[derive(Debug, Clone, PartialEq)]
 pub enum Shape {
