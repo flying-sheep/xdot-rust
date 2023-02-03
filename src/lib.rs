@@ -5,7 +5,7 @@
 //! ## Example
 //! ```rust
 //! use xdot::parse;
-//! parse("c 7 -#ff0000 p 4 4 4 36 4 36 36 4 36");
+//! let shapes = parse("c 7 -#ff0000 p 4 4 4 36 4 36 36 4 36");
 //! ```
 //!
 //! ## Feature flags
