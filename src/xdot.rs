@@ -9,7 +9,7 @@ mod op_parser;
 mod ops;
 mod shapes;
 
-pub(super) fn parse<'a>(input: &'a str) -> Result<Vec<ShapeDraw>, NomError<&'a str>> {
+pub(super) fn parse(input: &str) -> Result<Vec<ShapeDraw>, NomError<&str>> {
     use ops::Op::*;
     let mut pen = Pen::default();
     let mut shape_draws = vec![];
