@@ -4,14 +4,35 @@ use graphviz_rust::{
     printer::PrinterContext,
 };
 use nom::Finish;
+use thiserror::Error;
 
 mod graph_ext;
 
 use self::graph_ext::{Elem, GraphExt};
 use super::xdot::{parse, ShapeDraw};
-use super::XDotError;
 
-pub fn layout_and_draw(graph: Graph) -> Result<Vec<ShapeDraw>, XDotError> {
+/// Error wrapping possible errors that can occur when running [layout_and_draw].
+#[derive(Error, Debug)]
+pub enum LayoutError {
+    #[error("failed to run xdot")]
+    Layout(#[from] std::io::Error),
+    #[error("failed to parse dot")]
+    ParseDot(String),
+    #[error("failed to parse xdot attributes")]
+    ParseXDot(#[from] nom::error::Error<String>),
+}
+impl From<nom::error::Error<&str>> for LayoutError {
+    fn from(e: nom::error::Error<&str>) -> Self {
+        nom::error::Error {
+            input: e.input.to_owned(),
+            code: e.code,
+        }
+        .into()
+    }
+}
+
+/// Run `xdot` layout algorithm on a [Graph](graphviz_rust::dot_structures::Graph) and extract all [ShapeDraw] operations.
+pub fn layout_and_draw(graph: Graph) -> Result<Vec<ShapeDraw>, LayoutError> {
     let mut ctx = PrinterContext::default();
     let layed_out = graphviz_rust::exec(
         graph,
@@ -22,7 +43,7 @@ pub fn layout_and_draw(graph: Graph) -> Result<Vec<ShapeDraw>, XDotError> {
         ],
     )?;
     // println!("{}", &layed_out);
-    let graph = graphviz_rust::parse(&layed_out).map_err(XDotError::ParseDot)?;
+    let graph = graphviz_rust::parse(&layed_out).map_err(LayoutError::ParseDot)?;
     let shapes = graph
         .iter_elems()
         .map(handle_elem)

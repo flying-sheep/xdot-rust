@@ -1,6 +1,6 @@
 use super::{attrs::*, shapes::Shape};
 
-/// Store pen attributes.
+/// Stores attributes for lines, shapes, and text, such as color and font.
 #[derive(Debug, Clone, PartialEq)]
 pub struct Pen {
     pub color: Rgba,
@@ -25,6 +25,7 @@ impl Default for Pen {
     }
 }
 
+/// A [Shape] together with a [Pen].
 #[derive(Debug, Clone, PartialEq)]
 pub struct ShapeDraw {
     pub pen: Pen,
