@@ -3,7 +3,7 @@ use graphviz_rust::{
     dot_structures::{Attribute, Graph, Id},
     printer::PrinterContext,
 };
-use nom::Finish;
+use nom::{error::Error as NomError, Finish};
 use thiserror::Error;
 
 mod graph_ext;
@@ -22,15 +22,17 @@ pub enum LayoutError {
     #[error("failed to parse dot")]
     ParseDot(String),
     #[error("failed to parse xdot attributes")]
-    ParseXDot(#[from] nom::error::Error<String>),
+    ParseXDot(#[from] NomError<String>),
 }
-impl From<nom::error::Error<&str>> for LayoutError {
-    fn from(e: nom::error::Error<&str>) -> Self {
-        nom::error::Error {
-            input: e.input.to_owned(),
-            code: e.code,
-        }
-        .into()
+impl From<NomError<&str>> for LayoutError {
+    fn from(e: NomError<&str>) -> Self {
+        nom2owned(e).into()
+    }
+}
+fn nom2owned(e: NomError<&str>) -> NomError<String> {
+    NomError {
+        input: e.input.to_owned(),
+        code: e.code,
     }
 }
 
@@ -51,21 +53,22 @@ fn layout_graph(graph: Graph) -> Result<Graph, LayoutError> {
         ],
     )?;
     // println!("{}", &layed_out);
-    Ok(graphviz_rust::parse(&layed_out).map_err(LayoutError::ParseDot)?)
+    graphviz_rust::parse(&layed_out).map_err(LayoutError::ParseDot)
 }
 
 /// Extract [ShapeDraw] operations from a graph annotated with `xdot` draw attributes.
-pub fn draw_graph(graph: Graph) -> Result<Vec<ShapeDraw>, nom::error::Error<String>> {
+pub fn draw_graph(graph: Graph) -> Result<Vec<ShapeDraw>, NomError<String>> {
     Ok(graph
         .iter_elems()
         .map(handle_elem)
-        .collect::<Result<Vec<_>, _>>()?
+        .collect::<Result<Vec<_>, _>>()
+        .map_err(nom2owned)?
         .into_iter()
         .flatten()
         .collect::<Vec<_>>())
 }
 
-fn handle_elem(elem: Elem) -> Result<Vec<ShapeDraw>, nom::error::Error<&str>> {
+fn handle_elem(elem: Elem) -> Result<Vec<ShapeDraw>, NomError<&str>> {
     let attributes: &[Attribute] = match elem {
         Elem::Edge(edge) => edge.attributes.as_ref(),
         Elem::Node(node) => node.attributes.as_ref(),
@@ -87,7 +90,7 @@ fn handle_elem(elem: Elem) -> Result<Vec<ShapeDraw>, nom::error::Error<&str>> {
     Ok(shapes)
 }
 
-fn dot_unescape(input: &str) -> Result<&str, nom::error::Error<&str>> {
+fn dot_unescape(input: &str) -> Result<&str, NomError<&str>> {
     use nom::{
         bytes::complete::{tag, take_while},
         combinator::eof,
