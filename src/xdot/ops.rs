@@ -1,5 +1,8 @@
 //! xdot drawing and pen manipulation operation
-use super::{attrs::*, shapes::*};
+use super::{
+    draw::{FontCharacteristics, Rgba, Style},
+    shapes::*,
+};
 
 /// An operation to draw a shape or modify drawing attributes like color or line style.
 #[derive(Debug, Clone, PartialEq)]

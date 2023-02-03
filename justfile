@@ -3,6 +3,9 @@
 _default:
     @just --list
 
+watch:
+    cargo watch -s 'just doc' -s 'just fmt'
+
 # Build package
 build:
     cargo hack --feature-powerset build --verbose

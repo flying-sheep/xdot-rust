@@ -9,9 +9,12 @@ use thiserror::Error;
 mod graph_ext;
 
 use self::graph_ext::{Elem, GraphExt};
-use super::xdot::{parse, ShapeDraw};
+use super::{
+    xdot::{parse, ShapeDraw},
+    ATTR_NAMES,
+};
 
-/// Error wrapping possible errors that can occur when running [layout_and_draw].
+/// Error wrapping possible errors that can occur when running [draw_graph].
 #[derive(Error, Debug)]
 pub enum LayoutError {
     #[error("failed to run xdot")]
@@ -32,7 +35,12 @@ impl From<nom::error::Error<&str>> for LayoutError {
 }
 
 /// Run `xdot` layout algorithm on a [Graph](graphviz_rust::dot_structures::Graph) and extract all [ShapeDraw] operations.
-pub fn layout_and_draw(graph: Graph) -> Result<Vec<ShapeDraw>, LayoutError> {
+pub fn layout_and_draw_graph(graph: Graph) -> Result<Vec<ShapeDraw>, LayoutError> {
+    let layed_out = layout_graph(graph)?;
+    Ok(draw_graph(layed_out)?)
+}
+
+fn layout_graph(graph: Graph) -> Result<Graph, LayoutError> {
     let mut ctx = PrinterContext::default();
     let layed_out = graphviz_rust::exec(
         graph,
@@ -43,20 +51,19 @@ pub fn layout_and_draw(graph: Graph) -> Result<Vec<ShapeDraw>, LayoutError> {
         ],
     )?;
     // println!("{}", &layed_out);
-    let graph = graphviz_rust::parse(&layed_out).map_err(LayoutError::ParseDot)?;
-    let shapes = graph
+    Ok(graphviz_rust::parse(&layed_out).map_err(LayoutError::ParseDot)?)
+}
+
+/// Extract [ShapeDraw] operations from a graph annotated with `xdot` draw attributes.
+pub fn draw_graph(graph: Graph) -> Result<Vec<ShapeDraw>, nom::error::Error<String>> {
+    Ok(graph
         .iter_elems()
         .map(handle_elem)
         .collect::<Result<Vec<_>, _>>()?
         .into_iter()
         .flatten()
-        .collect::<Vec<_>>();
-    Ok(shapes)
+        .collect::<Vec<_>>())
 }
-
-const ATTR_NAMES: [&str; 6] = [
-    "_draw_", "_ldraw_", "_hdraw_", "_tdraw_", "_hldraw_", "_tldraw_",
-];
 
 fn handle_elem(elem: Elem) -> Result<Vec<ShapeDraw>, nom::error::Error<&str>> {
     let attributes: &[Attribute] = match elem {

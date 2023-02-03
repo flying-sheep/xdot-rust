@@ -17,7 +17,7 @@ use nom::{
 use super::shapes::ExternalImage;
 
 use super::{
-    attrs::{FontCharacteristics, Rgba, Style},
+    draw::{FontCharacteristics, Rgba, Style},
     ops::Op,
     shapes::{Ellipse, Points, PointsType, Text, TextAlign},
 };

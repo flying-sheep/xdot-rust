@@ -1,13 +1,21 @@
+//! `xdot` draw attribute parser without the graph related parts.
+
 use nom::error::Error as NomError;
 
-mod attrs;
-mod declarative;
+pub mod draw;
 mod op_parser;
 mod ops;
 pub mod shapes;
 
-pub use self::attrs::{FontCharacteristics, Rgba, Style};
-pub use self::declarative::{Pen, ShapeDraw};
+pub use self::draw::Pen;
+use self::shapes::Shape;
+
+/// A [Shape] together with a [Pen].
+#[derive(Debug, Clone, PartialEq)]
+pub struct ShapeDraw {
+    pub pen: Pen,
+    pub shape: Shape,
+}
 
 /// Parse an `xdot` draw attribute (as defined [here](https://graphviz.org/docs/outputs/canon/#xdot)).
 /// Returns a vector of stateless drawing operations defining shape and style of the drawn node, edge, or label.
