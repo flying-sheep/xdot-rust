@@ -1,4 +1,3 @@
-use graphviz_rust;
 use nom::Finish;
 use graphviz_rust::{
     cmd::{CommandArg, Format, Layout},
