@@ -6,13 +6,13 @@ use thiserror::Error;
 mod layout;
 mod xdot;
 
-pub use xdot::{
+pub use self::xdot::{
     parse, Ellipse, ExternalImage, FontCharacteristics, Pen, Points, PointsType, Rgba, Shape,
     ShapeDraw, Style, Text, TextAlign,
 };
 
 #[cfg(feature = "layout")]
-pub use layout::layout_and_draw;
+pub use self::layout::layout_and_draw;
 
 #[derive(Error, Debug)]
 pub enum XDotError {

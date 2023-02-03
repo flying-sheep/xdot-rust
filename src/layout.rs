@@ -8,7 +8,8 @@ use nom::Finish;
 mod graph_ext;
 
 use self::graph_ext::{Elem, GraphExt};
-use crate::{parse, ShapeDraw, XDotError};
+use super::xdot::{ShapeDraw, parse};
+use super::XDotError;
 
 pub fn layout_and_draw(graph: Graph) -> Result<Vec<ShapeDraw>, XDotError> {
     let mut ctx = PrinterContext::default();

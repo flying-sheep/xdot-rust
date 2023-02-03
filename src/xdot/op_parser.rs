@@ -14,7 +14,7 @@ use nom::{
     Finish, IResult,
 };
 
-use crate::xdot::shapes::ExternalImage;
+use super::shapes::ExternalImage;
 
 use super::{
     attrs::{FontCharacteristics, Rgba, Style},
