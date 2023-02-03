@@ -1,24 +1,33 @@
-use color_eyre::{
-    self,
-    eyre::{Report, Result},
-};
 use graph_ext::{Elem, GraphExt};
 use graphviz_rust as gv;
 use gv::{
     cmd::{CommandArg, Format, Layout},
-    dot_structures::{Attribute, Id},
+    dot_structures::{Attribute, Id, Graph},
     printer::PrinterContext,
 };
+use nom::Finish;
+use thiserror::Error;
 use xdot::{parse, ShapeDraw};
 
 mod graph_ext;
 mod xdot;
 
-const TEST: &str = "graph { a -- b }";
+#[derive(Error, Debug)]
+pub enum XDotError {
+    #[error("failed to run xdot")]
+    Layout(#[from] std::io::Error),
+    #[error("failed to parse dot")]
+    ParseDot(String),
+    #[error("failed to parse xdot attributes")]
+    ParseXDot(#[from] nom::error::Error<String>),
+}
+impl From<nom::error::Error<&str>> for XDotError {
+    fn from(e: nom::error::Error<&str>) -> Self {
+        nom::error::Error { input: e.input.to_owned(), code: e.code }.into()
+    }
+}
 
-fn main() -> Result<()> {
-    color_eyre::install()?;
-    let graph = gv::parse(TEST).map_err(Report::msg)?;
+pub fn main(graph: Graph) -> Result<(), XDotError> {
     let mut ctx = PrinterContext::default();
     let layed_out = gv::exec(
         graph,
@@ -29,11 +38,11 @@ fn main() -> Result<()> {
         ],
     )?;
     // println!("{}", &layed_out);
-    let graph = gv::parse(&layed_out).map_err(Report::msg)?;
+    let graph = gv::parse(&layed_out).map_err(|msg| XDotError::ParseDot(msg))?;
     let shapes = graph
         .iter_elems()
         .map(handle_elem)
-        .collect::<Result<Vec<_>>>()?
+        .collect::<Result<Vec<_>, _>>()?
         .into_iter()
         .flatten()
         .collect::<Vec<_>>();
@@ -47,7 +56,7 @@ const ATTR_NAMES: [&str; 6] = [
     "_draw_", "_ldraw_", "_hdraw_", "_tdraw_", "_hldraw_", "_tldraw_",
 ];
 
-fn handle_elem(elem: Elem) -> Result<Vec<ShapeDraw>> {
+fn handle_elem(elem: Elem) -> Result<Vec<ShapeDraw>, nom::error::Error<&str>> {
     let attributes: &[Attribute] = match elem {
         Elem::Edge(edge) => edge.attributes.as_ref(),
         Elem::Node(node) => node.attributes.as_ref(),
@@ -61,7 +70,7 @@ fn handle_elem(elem: Elem) -> Result<Vec<ShapeDraw>> {
             if let Id::Escaped(ref attr_val_raw) = attr.1 {
                 let attr_val = dot_unescape(attr_val_raw)?;
                 dbg!(&attr_name, &attr_val);
-                let mut new = parse(&attr_val).map_err(|e| Report::msg(e.input.to_owned()))?;
+                let mut new = parse(&attr_val)?;
                 shapes.append(&mut new);
             }
         }
@@ -69,30 +78,24 @@ fn handle_elem(elem: Elem) -> Result<Vec<ShapeDraw>> {
     Ok(shapes)
 }
 
-fn dot_unescape(input: &str) -> Result<String> {
-    // TODO: dedupe error conversion, throw better error if input is not empty
-    let (input, s) = dot_unescape_inner(input).map_err(|e| Report::msg(e.to_owned()))?;
-    assert_eq!(input, "");
-    Ok(s.to_owned())
-}
-
-fn dot_unescape_inner(input: &str) -> nom::IResult<&str, &str> {
+fn dot_unescape(input: &str) -> Result<&str, nom::error::Error<&str>> {
     use nom::{
         bytes::complete::{tag, take_while},
         combinator::eof,
         sequence::{delimited, terminated},
     };
     // TODO: actually unescape
-    terminated(
+    let (_, inner) = terminated(
         delimited(tag("\""), take_while(|c| c != '\\' && c != '\"'), tag("\"")),
         eof,
-    )(input)
+    )(input).finish()?;
+    Ok(inner)
 }
 
 #[test]
 fn test_dot_unescape() {
-    assert_eq!(dot_unescape_inner("\"\""), Ok(("", "")));
-    assert_eq!(dot_unescape_inner("\"xy\""), Ok(("", "xy")));
-    assert!(dot_unescape_inner("\"\"\"").is_err());
-    assert!(dot_unescape_inner("\"\\\"").is_err()); // so far no actual escape support
+    assert_eq!(dot_unescape("\"\""), Ok(""));
+    assert_eq!(dot_unescape("\"xy\""), Ok("xy"));
+    assert!(dot_unescape("\"\"\"").is_err());
+    assert!(dot_unescape("\"\\\"").is_err()); // so far no actual escape support
 }
