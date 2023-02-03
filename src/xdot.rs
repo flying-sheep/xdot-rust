@@ -10,6 +10,8 @@ pub use self::attrs::{FontCharacteristics, Rgba, Style};
 pub use self::declarative::{Pen, ShapeDraw};
 pub use self::shapes::{Ellipse, ExternalImage, Points, PointsType, Shape, Text, TextAlign};
 
+/// Parse an `xdot` draw attribute (as defined [here](https://graphviz.org/docs/outputs/canon/#xdot)).
+/// Returns a vector of stateless drawing operations defining shape and style of the drawn node, edge, or label.
 pub fn parse(input: &str) -> Result<Vec<ShapeDraw>, NomError<&str>> {
     use ops::Op::*;
     let mut pen = Pen::default();

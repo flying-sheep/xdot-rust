@@ -17,7 +17,7 @@ test:
 
 # Build documentation
 doc:
-    cargo +nightly doc --all-features
+    RUSTDOCFLAGS="-Dwarnings" cargo +nightly doc --all-features
 
 # Format code
 fmt *args:
