@@ -8,7 +8,7 @@ use nom::Finish;
 mod graph_ext;
 
 use self::graph_ext::{Elem, GraphExt};
-use super::xdot::{ShapeDraw, parse};
+use super::xdot::{parse, ShapeDraw};
 use super::XDotError;
 
 pub fn layout_and_draw(graph: Graph) -> Result<Vec<ShapeDraw>, XDotError> {

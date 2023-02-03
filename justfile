@@ -20,5 +20,5 @@ doc:
     cargo +nightly doc --all-features
 
 # Format code
-fmt:
-    cargo fmt
+fmt *args:
+    cargo fmt {{args}}
