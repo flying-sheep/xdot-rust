@@ -14,7 +14,7 @@ use xdot::{parse, ShapeDraw};
 mod graph_ext;
 mod xdot;
 
-const TEST: &'static str = "graph { a -- b }";
+const TEST: &str = "graph { a -- b }";
 
 fn main() -> Result<()> {
     color_eyre::install()?;
@@ -43,7 +43,7 @@ fn main() -> Result<()> {
     Ok(())
 }
 
-const ATTR_NAMES: [&'static str; 6] = [
+const ATTR_NAMES: [&str; 6] = [
     "_draw_", "_ldraw_", "_hdraw_", "_tdraw_", "_hldraw_", "_tldraw_",
 ];
 
