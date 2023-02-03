@@ -14,7 +14,7 @@ use xdot::{parse, ShapeDraw};
 mod graph_ext;
 mod xdot;
 
-const TEST: &'static str = "graph { a -- b }";
+const TEST: &str = "graph { a -- b }";
 
 fn main() -> Result<()> {
     color_eyre::install()?;
@@ -43,7 +43,7 @@ fn main() -> Result<()> {
     Ok(())
 }
 
-const ATTR_NAMES: [&'static str; 6] = [
+const ATTR_NAMES: [&str; 6] = [
     "_draw_", "_ldraw_", "_hdraw_", "_tdraw_", "_hldraw_", "_tldraw_",
 ];
 
@@ -76,7 +76,7 @@ fn dot_unescape(input: &str) -> Result<String> {
     Ok(s.to_owned())
 }
 
-fn dot_unescape_inner<'a>(input: &'a str) -> nom::IResult<&'a str, &'a str> {
+fn dot_unescape_inner(input: &str) -> nom::IResult<&str, &str> {
     use nom::{
         bytes::complete::{tag, take_while},
         combinator::eof,

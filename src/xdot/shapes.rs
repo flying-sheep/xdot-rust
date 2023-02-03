@@ -13,9 +13,9 @@ pub(crate) struct Ellipse {
     pub w: f32,
     pub h: f32,
 }
-impl Into<Shape> for Ellipse {
-    fn into(self) -> Shape {
-        Shape::Ellipse(self)
+impl From<Ellipse> for Shape {
+    fn from(val: Ellipse) -> Self {
+        Shape::Ellipse(val)
     }
 }
 
@@ -31,9 +31,9 @@ pub(crate) struct Points {
     pub typ: PointsType,
     pub points: Vec<(f32, f32)>,
 }
-impl Into<Shape> for Points {
-    fn into(self) -> Shape {
-        Shape::Points(self)
+impl From<Points> for Shape {
+    fn from(val: Points) -> Self {
+        Shape::Points(val)
     }
 }
 
@@ -51,9 +51,9 @@ pub(crate) struct Text {
     pub width: f32,
     pub text: String,
 }
-impl Into<Shape> for Text {
-    fn into(self) -> Shape {
-        Shape::Text(self)
+impl From<Text> for Shape {
+    fn from(val: Text) -> Self {
+        Shape::Text(val)
     }
 }
 

@@ -14,44 +14,44 @@ pub(super) enum Op {
 
 // shapes
 
-impl Into<Op> for Shape {
-    fn into(self) -> Op {
-        Op::DrawShape(self)
+impl From<Shape> for Op {
+    fn from(val: Shape) -> Self {
+        Op::DrawShape(val)
     }
 }
 
-impl Into<Op> for Ellipse {
-    fn into(self) -> Op {
-        Into::<Shape>::into(self).into()
+impl From<Ellipse> for Op {
+    fn from(val: Ellipse) -> Self {
+        Into::<Shape>::into(val).into()
     }
 }
-impl Into<Op> for Points {
-    fn into(self) -> Op {
-        Into::<Shape>::into(self).into()
+impl From<Points> for Op {
+    fn from(val: Points) -> Self {
+        Into::<Shape>::into(val).into()
     }
 }
-impl Into<Op> for Text {
-    fn into(self) -> Op {
-        Into::<Shape>::into(self).into()
+impl From<Text> for Op {
+    fn from(val: Text) -> Self {
+        Into::<Shape>::into(val).into()
     }
 }
 
 // rest
 
-impl Into<Op> for FontCharacteristics {
-    fn into(self) -> Op {
-        Op::SetFontCharacteristics(self)
+impl From<FontCharacteristics> for Op {
+    fn from(val: FontCharacteristics) -> Self {
+        Op::SetFontCharacteristics(val)
     }
 }
 
-impl Into<Op> for Style {
-    fn into(self) -> Op {
-        Op::SetStyle(self)
+impl From<Style> for Op {
+    fn from(val: Style) -> Self {
+        Op::SetStyle(val)
     }
 }
 
-impl Into<Op> for ExternalImage {
-    fn into(self) -> Op {
-        Op::ExternalImage(self)
+impl From<ExternalImage> for Op {
+    fn from(val: ExternalImage) -> Self {
+        Op::ExternalImage(val)
     }
 }
