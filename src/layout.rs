@@ -21,7 +21,7 @@ pub fn layout_and_draw(graph: Graph) -> Result<Vec<ShapeDraw>, XDotError> {
         ],
     )?;
     // println!("{}", &layed_out);
-    let graph = graphviz_rust::parse(&layed_out).map_err(|msg| XDotError::ParseDot(msg))?;
+    let graph = graphviz_rust::parse(&layed_out).map_err(XDotError::ParseDot)?;
     let shapes = graph
         .iter_elems()
         .map(handle_elem)
@@ -50,7 +50,7 @@ fn handle_elem(elem: Elem) -> Result<Vec<ShapeDraw>, nom::error::Error<&str>> {
             if let Id::Escaped(ref attr_val_raw) = attr.1 {
                 let attr_val = dot_unescape(attr_val_raw)?;
                 dbg!(&attr_name, &attr_val);
-                let mut new = parse(&attr_val)?;
+                let mut new = parse(attr_val)?;
                 shapes.append(&mut new);
             }
         }
