@@ -117,8 +117,18 @@ dependencies = [
 
 [[package]]
 name = "dot-generator"
+version = "0.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "322e00783838d540a6288c25ae085983750521fb8cca82fc653eb2457c369565"
+dependencies = [
+ "dot-structures",
+]
+
+[[package]]
+name = "dot-generator"
 version = "0.2.0"
-source = "git+https://github.com/flying-sheep/graphviz-rust.git?branch=fix-parser#a361f9adcbf496d9be319fd8d645f160f4d40025"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "0aaac7ada45f71873ebce336491d1c1bc4a7c8042c7cea978168ad59e805b871"
 dependencies = [
  "dot-structures",
 ]
@@ -126,7 +136,8 @@ dependencies = [
 [[package]]
 name = "dot-structures"
 version = "0.1.0"
-source = "git+https://github.com/flying-sheep/graphviz-rust.git?branch=fix-parser#a361f9adcbf496d9be319fd8d645f160f4d40025"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "545da7d6df7f8fd0de7106669a7d0bfa3dbcfa24d81da46906ad658188b2ff7c"
 
 [[package]]
 name = "eyre"
@@ -176,10 +187,11 @@ checksum = "221996f774192f0f718773def8201c4ae31f02616a54ccfc2d358bb0e5cefdec"
 
 [[package]]
 name = "graphviz-rust"
-version = "0.5.2"
-source = "git+https://github.com/flying-sheep/graphviz-rust.git?branch=fix-parser#a361f9adcbf496d9be319fd8d645f160f4d40025"
+version = "0.6.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "06d2e1afca2ae5a9887b57f991e89c9078e4150fc8875cc2b0babf4bdb3ec720"
 dependencies = [
- "dot-generator",
+ "dot-generator 0.2.0",
  "dot-structures",
  "into-attr",
  "into-attr-derive",
@@ -219,7 +231,8 @@ dependencies = [
 [[package]]
 name = "into-attr"
 version = "0.1.0"
-source = "git+https://github.com/flying-sheep/graphviz-rust.git?branch=fix-parser#a361f9adcbf496d9be319fd8d645f160f4d40025"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "c6ec0dd848c05d2695dd73818984fb156ac8cbcbfdf4e474243590bfcc2468e9"
 dependencies = [
  "dot-structures",
 ]
@@ -227,9 +240,10 @@ dependencies = [
 [[package]]
 name = "into-attr-derive"
 version = "0.1.0"
-source = "git+https://github.com/flying-sheep/graphviz-rust.git?branch=fix-parser#a361f9adcbf496d9be319fd8d645f160f4d40025"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "6b88c3c684271aa7810934ae69a0b904c59f478cb551f3f388cc1c384f0c3145"
 dependencies = [
- "dot-generator",
+ "dot-generator 0.1.0",
  "dot-structures",
  "into-attr",
  "quote",
