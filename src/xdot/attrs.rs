@@ -21,7 +21,7 @@ impl Default for Rgba {
     }
 }
 
-/// See https://graphviz.org/docs/attr-types/style/
+/// See <https://graphviz.org/docs/attr-types/style/>
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Style {
     Dashed,

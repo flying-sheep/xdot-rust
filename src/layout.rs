@@ -1,14 +1,14 @@
-use nom::Finish;
 use graphviz_rust::{
     cmd::{CommandArg, Format, Layout},
     dot_structures::{Attribute, Graph, Id},
     printer::PrinterContext,
 };
+use nom::Finish;
 
 mod graph_ext;
 
-use crate::{ShapeDraw, XDotError, parse};
 use self::graph_ext::{Elem, GraphExt};
+use crate::{parse, ShapeDraw, XDotError};
 
 pub fn layout_and_draw(graph: Graph) -> Result<Vec<ShapeDraw>, XDotError> {
     let mut ctx = PrinterContext::default();

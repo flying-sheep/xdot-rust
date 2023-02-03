@@ -1,9 +1,10 @@
+#![cfg_attr(all(doc, CHANNEL_NIGHTLY), feature(doc_auto_cfg))]
 
 use thiserror::Error;
 
-mod xdot;
 #[cfg(feature = "layout")]
 mod layout;
+mod xdot;
 
 pub use xdot::{
     parse, Ellipse, ExternalImage, FontCharacteristics, Pen, Points, PointsType, Rgba, Shape,
