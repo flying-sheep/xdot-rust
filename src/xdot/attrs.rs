@@ -4,7 +4,7 @@ use std::str::FromStr;
 use bitflags::bitflags;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub(crate) struct Rgba {
+pub struct Rgba {
     pub r: u8,
     pub g: u8,
     pub b: u8,
@@ -23,7 +23,7 @@ impl Default for Rgba {
 
 /// See https://graphviz.org/docs/attr-types/style/
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub(crate) enum Style {
+pub enum Style {
     Dashed,
     Dotted,
     Solid,
@@ -54,7 +54,7 @@ impl FromStr for Style {
 bitflags! {
     /// Matches values in https://graphviz.org/docs/outputs/canon/#xdot
     #[derive(Default)]
-    pub(crate) struct FontCharacteristics: u128 {
+    pub struct FontCharacteristics: u128 {
         const BOLD           = 0b00000001;
         const ITALIC         = 0b00000010;
         const UNDERLINE      = 0b00000100;

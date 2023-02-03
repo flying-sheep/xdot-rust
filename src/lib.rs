@@ -2,15 +2,19 @@ use graph_ext::{Elem, GraphExt};
 use graphviz_rust as gv;
 use gv::{
     cmd::{CommandArg, Format, Layout},
-    dot_structures::{Attribute, Id, Graph},
+    dot_structures::{Attribute, Graph, Id},
     printer::PrinterContext,
 };
 use nom::Finish;
 use thiserror::Error;
-use xdot::{parse, ShapeDraw};
 
 mod graph_ext;
 mod xdot;
+
+pub use xdot::{
+    parse, Ellipse, ExternalImage, FontCharacteristics, Pen, Points, PointsType, Rgba, Shape,
+    ShapeDraw, Style, Text, TextAlign,
+};
 
 #[derive(Error, Debug)]
 pub enum XDotError {
@@ -23,11 +27,15 @@ pub enum XDotError {
 }
 impl From<nom::error::Error<&str>> for XDotError {
     fn from(e: nom::error::Error<&str>) -> Self {
-        nom::error::Error { input: e.input.to_owned(), code: e.code }.into()
+        nom::error::Error {
+            input: e.input.to_owned(),
+            code: e.code,
+        }
+        .into()
     }
 }
 
-pub fn main(graph: Graph) -> Result<(), XDotError> {
+pub fn layout_and_draw(graph: Graph) -> Result<Vec<ShapeDraw>, XDotError> {
     let mut ctx = PrinterContext::default();
     let layed_out = gv::exec(
         graph,
@@ -46,10 +54,7 @@ pub fn main(graph: Graph) -> Result<(), XDotError> {
         .into_iter()
         .flatten()
         .collect::<Vec<_>>();
-    for shape in shapes {
-        dbg!(shape);
-    }
-    Ok(())
+    Ok(shapes)
 }
 
 const ATTR_NAMES: [&str; 6] = [
@@ -88,7 +93,8 @@ fn dot_unescape(input: &str) -> Result<&str, nom::error::Error<&str>> {
     let (_, inner) = terminated(
         delimited(tag("\""), take_while(|c| c != '\\' && c != '\"'), tag("\"")),
         eof,
-    )(input).finish()?;
+    )(input)
+    .finish()?;
     Ok(inner)
 }
 
