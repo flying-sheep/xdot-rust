@@ -17,7 +17,7 @@ test:
 
 # Build documentation
 doc:
-    RUSTDOCFLAGS="-Dwarnings" cargo +nightly doc --all-features
+    RUSTDOCFLAGS="-Dwarnings -Z unstable-options --enable-index-page" cargo +nightly doc --all-features
 
 # Format code
 fmt *args:
