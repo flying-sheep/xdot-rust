@@ -5,15 +5,19 @@ version = '0.1.0'
 edition = '2021'
 
 [features]
-layout = ['graphviz-rust']
+## The layout feature allows to parse `xdot` attributes from
+## [graphviz_rust]’s [Graph](graphviz_rust::dot_structures::Graph)s
+## using [layout_and_draw].
+layout = ['graphviz-rust', 'thiserror']
 
 [dependencies]
 bitflags = '1.3.2'
+document-features = { version = '0.2.7', optional = true }
 graphviz-rust = { version = '0.6.1', optional = true }
 nom = '7.1.3'
 pest = '2.5.4'
 pest_derive = '2.5.4'
-thiserror = '1.0.38'
+thiserror = { version = '1.0.38', optional = true }
 
 [build-dependencies]
 rustc_version = '0.4.0'

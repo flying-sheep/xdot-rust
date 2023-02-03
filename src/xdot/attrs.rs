@@ -1,8 +1,9 @@
+///! Types reused for drawing things.
 use std::str::FromStr;
 
-///! Types reused for drawing things.
 use bitflags::bitflags;
 
+/// RGBA color representation with 8 bit per channel.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct Rgba {
     pub r: u8,
@@ -21,7 +22,8 @@ impl Default for Rgba {
     }
 }
 
-/// See <https://graphviz.org/docs/attr-types/style/>
+/// Line style for node borders and edges.
+/// See [here](https://graphviz.org/docs/attr-types/style/).
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Style {
     Dashed,
@@ -52,7 +54,8 @@ impl FromStr for Style {
 }
 
 bitflags! {
-    /// Matches values in https://graphviz.org/docs/outputs/canon/#xdot
+    /// Font weight and decorations.
+    /// Matches values defined [here](https://graphviz.org/docs/outputs/canon/#xdot).
     #[derive(Default)]
     pub struct FontCharacteristics: u128 {
         const BOLD           = 0b00000001;

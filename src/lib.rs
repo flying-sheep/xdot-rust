@@ -1,6 +1,15 @@
 #![cfg_attr(all(doc, CHANNEL_NIGHTLY), feature(doc_auto_cfg))]
 
-use thiserror::Error;
+//! Parse and draw [`xdot`](https://graphviz.org/docs/attr-types/xdot/) shapes.
+//!
+//! ## Example
+//! ```rust
+//! use xdot::parse;
+//! let shapes = parse("c 7 -#ff0000 p 4 4 4 36 4 36 36 4 36");
+//! ```
+//!
+//! ## Feature flags
+#![cfg_attr(all(doc, feature = "document-features"), doc = document_features::document_features!())]
 
 #[cfg(feature = "layout")]
 mod layout;
@@ -12,23 +21,4 @@ pub use self::xdot::{
 };
 
 #[cfg(feature = "layout")]
-pub use self::layout::layout_and_draw;
-
-#[derive(Error, Debug)]
-pub enum XDotError {
-    #[error("failed to run xdot")]
-    Layout(#[from] std::io::Error),
-    #[error("failed to parse dot")]
-    ParseDot(String),
-    #[error("failed to parse xdot attributes")]
-    ParseXDot(#[from] nom::error::Error<String>),
-}
-impl From<nom::error::Error<&str>> for XDotError {
-    fn from(e: nom::error::Error<&str>) -> Self {
-        nom::error::Error {
-            input: e.input.to_owned(),
-            code: e.code,
-        }
-        .into()
-    }
-}
+pub use self::layout::{layout_and_draw, LayoutError};

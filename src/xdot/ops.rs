@@ -1,6 +1,7 @@
 ///! xdot drawing and pen manipulation operation
 use super::{attrs::*, shapes::*};
 
+/// An operation to draw a shape or modify drawing attributes like color or line style.
 #[derive(Debug, Clone, PartialEq)]
 pub(super) enum Op {
     DrawShape(Shape),
