@@ -1,12 +1,12 @@
 #[derive(Debug, Clone, PartialEq)]
-pub(crate) enum Shape {
+pub enum Shape {
     Ellipse(Ellipse),
     Points(Points),
     Text(Text),
 }
 
 #[derive(Debug, Clone, PartialEq)]
-pub(crate) struct Ellipse {
+pub struct Ellipse {
     pub filled: bool,
     pub x: f32,
     pub y: f32,
@@ -20,13 +20,13 @@ impl From<Ellipse> for Shape {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub(crate) enum PointsType {
+pub enum PointsType {
     Polygon,
     Polyline,
     BSpline,
 }
 #[derive(Debug, Clone, PartialEq)]
-pub(crate) struct Points {
+pub struct Points {
     pub filled: bool,
     pub typ: PointsType,
     pub points: Vec<(f32, f32)>,
@@ -38,13 +38,13 @@ impl From<Points> for Shape {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub(crate) enum TextAlign {
+pub enum TextAlign {
     Left,
     Center,
     Right,
 }
 #[derive(Debug, Clone, PartialEq)]
-pub(crate) struct Text {
+pub struct Text {
     pub x: f32,
     pub y: f32,
     pub align: TextAlign,
@@ -58,4 +58,4 @@ impl From<Text> for Shape {
 }
 
 #[derive(Debug, Clone, Copy, Hash, PartialEq, Eq, PartialOrd, Ord)]
-pub(crate) struct ExternalImage;
+pub struct ExternalImage;

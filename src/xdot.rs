@@ -1,15 +1,16 @@
 use nom::error::Error as NomError;
 
-use self::declarative::Pen;
-pub(super) use self::declarative::ShapeDraw;
-
 mod attrs;
 mod declarative;
 mod op_parser;
 mod ops;
 mod shapes;
 
-pub(super) fn parse(input: &str) -> Result<Vec<ShapeDraw>, NomError<&str>> {
+pub use self::attrs::{FontCharacteristics, Rgba, Style};
+pub use self::declarative::{Pen, ShapeDraw};
+pub use self::shapes::{Ellipse, ExternalImage, Points, PointsType, Shape, Text, TextAlign};
+
+pub fn parse(input: &str) -> Result<Vec<ShapeDraw>, NomError<&str>> {
     use ops::Op::*;
     let mut pen = Pen::default();
     let mut shape_draws = vec![];

@@ -2,7 +2,7 @@ use super::{attrs::*, shapes::Shape};
 
 /// Store pen attributes.
 #[derive(Debug, Clone, PartialEq)]
-pub(crate) struct Pen {
+pub struct Pen {
     pub color: Rgba,
     pub fill_color: Rgba,
     pub line_width: f32,
@@ -26,7 +26,7 @@ impl Default for Pen {
 }
 
 #[derive(Debug, Clone, PartialEq)]
-pub(crate) struct ShapeDraw {
+pub struct ShapeDraw {
     pub pen: Pen,
     pub shape: Shape,
 }
