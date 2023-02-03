@@ -14,3 +14,11 @@ check:
 # Runs unit tests
 test:
   cargo hack --feature-powerset test --locked
+
+# Build documentation
+doc:
+  cargo +nightly doc --all-features
+
+# Format code
+fmt:
+  cargo fmt
