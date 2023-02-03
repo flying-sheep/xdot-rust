@@ -1,6 +1,6 @@
 #![cfg_attr(all(doc, CHANNEL_NIGHTLY), feature(doc_auto_cfg))]
 
-//! Parse and draw [xdot](https://graphviz.org/docs/attr-types/xdot/) shapes.
+//! Parse and draw [`xdot`](https://graphviz.org/docs/attr-types/xdot/) shapes.
 //!
 //! ## Example
 //! ```rust
