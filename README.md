@@ -1,8 +1,9 @@
 [![CI](https://github.com/flying-sheep/xdot-rust/actions/workflows/rust.yml/badge.svg)](https://github.com/flying-sheep/xdot-rust/actions/workflows/rust.yml)
+[![docs.rs](https://img.shields.io/docsrs/xdot)](https://docs.rs/xdot/latest/xdot/)
 [![Crates.io](https://img.shields.io/crates/v/xdot)](https://crates.io/crates/xdot)
 
-xdot-rust
-=========
+xdot
+====
 
 The main function of this package is `parse`.
 It parses node/edge attributes on graphviz graphs created by [`xdot`](https://graphviz.org/docs/attr-types/xdot/) into drawable shapes.
