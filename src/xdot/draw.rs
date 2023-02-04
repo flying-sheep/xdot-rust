@@ -1,4 +1,8 @@
-use super::{attrs::*, shapes::Shape};
+//! Drawing attributes for lines, shapes, and text.
+
+mod attrs;
+
+pub use self::attrs::{FontCharacteristics, Rgba, Style};
 
 /// Stores attributes for lines, shapes, and text, such as color and font.
 #[derive(Debug, Clone, PartialEq)]
@@ -23,11 +27,4 @@ impl Default for Pen {
             font_characteristics: Default::default(),
         }
     }
-}
-
-/// A [Shape] together with a [Pen].
-#[derive(Debug, Clone, PartialEq)]
-pub struct ShapeDraw {
-    pub pen: Pen,
-    pub shape: Shape,
 }

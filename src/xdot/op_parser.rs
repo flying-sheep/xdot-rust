@@ -1,5 +1,5 @@
-///! Stateless parser extracting xdot operations.
-///! See https://graphviz.org/docs/outputs/canon/#xdot
+//! Stateless parser extracting `xdot` operations.
+//! See the [syntax documentation](https://graphviz.org/docs/outputs/canon/#xdot) for details.
 use std::str::FromStr;
 
 use nom::{
@@ -17,7 +17,7 @@ use nom::{
 use super::shapes::ExternalImage;
 
 use super::{
-    attrs::{FontCharacteristics, Rgba, Style},
+    draw::{FontCharacteristics, Rgba, Style},
     ops::Op,
     shapes::{Ellipse, Points, PointsType, Text, TextAlign},
 };

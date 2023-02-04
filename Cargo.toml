@@ -7,7 +7,7 @@ edition = '2021'
 [features]
 ## The layout feature allows to parse `xdot` attributes from
 ## [graphviz_rust]’s [Graph](graphviz_rust::dot_structures::Graph)s
-## using [layout_and_draw].
+## using [draw_graph].
 layout = ['graphviz-rust', 'thiserror']
 
 [dependencies]
