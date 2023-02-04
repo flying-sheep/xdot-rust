@@ -1,4 +1,5 @@
 [![CI](https://github.com/flying-sheep/xdot-rust/actions/workflows/rust.yml/badge.svg)](https://github.com/flying-sheep/xdot-rust/actions/workflows/rust.yml)
+[![Crates.io](https://img.shields.io/crates/v/xdot)](https://crates.io/crates/xdot)
 
 xdot-rust
 =========
