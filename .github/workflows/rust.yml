@@ -45,4 +45,5 @@ jobs:
       with:
         path: target/doc
     - uses: actions/deploy-pages@v1
+      if: github.ref_name == 'main'
       id: deployment
