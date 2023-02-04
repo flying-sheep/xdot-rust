@@ -1,8 +1,15 @@
 [package]
 name = 'xdot'
-description = 'Parse graphviz’ xdot draw instructions'
 version = '0.1.0'
+authors = ['Philipp A. <flying-sheep@web.de>']
 edition = '2021'
+description = 'Parse graphviz’ xdot draw instructions'
+documentation = 'https://docs.rs/xdot'
+readme = 'README.md'
+repository = 'https://github.com/flying-sheep/xdot-rust'
+license = 'GPL-3.0'
+keywords = ['graphviz', 'graph']
+categories = ['parser-implementations', 'rendering::data-formats']
 
 [features]
 ## The layout feature allows to parse `xdot` attributes from
