@@ -2,6 +2,7 @@
 
 /// A drawable shape including closed shapes, lines, and text.
 #[derive(Debug, Clone, PartialEq)]
+#[cfg_attr(feature= "pyo3", pyo3::pyclass)]
 pub enum Shape {
     Ellipse(Ellipse),
     Points(Points),
@@ -10,6 +11,7 @@ pub enum Shape {
 
 /// A horizontal ellipse shape.
 #[derive(Debug, Clone, PartialEq)]
+#[cfg_attr(feature= "pyo3", pyo3::pyclass)]
 pub struct Ellipse {
     pub filled: bool,
     pub x: f32,
@@ -25,6 +27,7 @@ impl From<Ellipse> for Shape {
 
 /// Type of shape defined by a sequence of points.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[cfg_attr(feature= "pyo3", pyo3::pyclass)]
 pub enum PointsType {
     Polygon,
     Polyline,
@@ -32,6 +35,7 @@ pub enum PointsType {
 }
 /// Shape defined by a sequence of points (line or closed shape).
 #[derive(Debug, Clone, PartialEq)]
+#[cfg_attr(feature= "pyo3", pyo3::pyclass)]
 pub struct Points {
     pub filled: bool,
     pub typ: PointsType,
@@ -45,6 +49,7 @@ impl From<Points> for Shape {
 
 /// Horizontal text alignment: left, center, or right.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[cfg_attr(feature= "pyo3", pyo3::pyclass)]
 pub enum TextAlign {
     Left,
     Center,
@@ -52,6 +57,7 @@ pub enum TextAlign {
 }
 /// Multiline text for node or edge labels.
 #[derive(Debug, Clone, PartialEq)]
+#[cfg_attr(feature= "pyo3", pyo3::pyclass)]
 pub struct Text {
     pub x: f32,
     pub y: f32,
@@ -68,4 +74,5 @@ impl From<Text> for Shape {
 /// External image, currently unimplemented.
 #[doc(hidden)]
 #[derive(Debug, Clone, Copy, Hash, PartialEq, Eq, PartialOrd, Ord)]
+#[cfg_attr(feature= "pyo3", pyo3::pyclass)]
 pub struct ExternalImage;

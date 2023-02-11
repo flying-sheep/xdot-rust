@@ -12,6 +12,7 @@ use self::shapes::Shape;
 
 /// A [Shape] together with a [Pen].
 #[derive(Debug, Clone, PartialEq)]
+#[cfg_attr(feature= "pyo3", pyo3::pyclass)]
 pub struct ShapeDraw {
     pub pen: Pen,
     pub shape: Shape,

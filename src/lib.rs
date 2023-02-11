@@ -25,3 +25,12 @@ pub use self::xdot::{draw, parse, shapes, ShapeDraw};
 pub static ATTR_NAMES: [&str; 6] = [
     "_draw_", "_ldraw_", "_hdraw_", "_tdraw_", "_hldraw_", "_tldraw_",
 ];
+
+
+/// Python module TODO
+#[cfg_attr(feature= "pyo3", pyo3::pymodule)]
+fn rust(_py: pyo3::Python, m: &pyo3::types::PyModule) -> pyo3::PyResult<()> {
+    m.add_class::<ShapeDraw>()?;
+    // TODO
+    Ok(())
+}
