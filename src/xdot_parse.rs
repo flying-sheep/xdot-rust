@@ -43,3 +43,12 @@ pub fn parse(input: &str) -> Result<Vec<ShapeDraw>, NomError<&str>> {
     }
     Ok(shape_draws)
 }
+
+#[cfg(feature= "pyo3")]
+#[pyo3::pyfunction]
+#[pyo3(name = "parse")]
+pub fn parse_py(input: &str) -> pyo3::PyResult<Vec<ShapeDraw>> {
+    use pyo3::{PyErr, exceptions::PyValueError};
+
+    parse(input).map_err(|e| PyErr::new::<PyValueError, _>(e.to_string()))
+}
