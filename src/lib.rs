@@ -18,6 +18,7 @@ mod xdot_parse;
 #[cfg(feature = "layout")]
 pub use self::layout::{draw_graph, layout_and_draw_graph, LayoutError};
 pub use self::xdot_parse::{draw, parse, shapes, ShapeDraw};
+#[cfg(feature= "pyo3")]
 use self::xdot_parse::parse_py;
 
 /// Known node/edge attribute names holding `xdot` draw instructions that [parse] can handle.
@@ -30,8 +31,11 @@ pub static ATTR_NAMES: [&str; 6] = [
 /// Python module TODO
 #[cfg(feature= "pyo3")]
 #[pyo3::pymodule]
-fn pymodule(_py: pyo3::Python, m: &pyo3::types::PyModule) -> pyo3::PyResult<()> {
+#[pyo3(name = "xdot_rs")]
+pub fn pymodule(_py: pyo3::Python, m: &pyo3::types::PyModule) -> pyo3::PyResult<()> {
     m.add_class::<ShapeDraw>()?;
-    m.add_function(pyo3::wrap_pyfunction!(parse_py, m)?);
+    m.add_function(pyo3::wrap_pyfunction!(parse_py, m)?)?;
+    m.add_wrapped(pyo3::wrap_pymodule!(shapes::pymodule))?;
+    m.add_wrapped(pyo3::wrap_pymodule!(draw::pymodule))?;
     Ok(())
 }

@@ -29,3 +29,14 @@ impl Default for Pen {
         }
     }
 }
+
+#[cfg(feature= "pyo3")]
+#[pyo3::pymodule]
+#[pyo3(name = "draw")]
+pub fn pymodule(_py: pyo3::Python, m: &pyo3::types::PyModule) -> pyo3::PyResult<()> {
+    m.add_class::<FontCharacteristics>()?;
+    m.add_class::<Rgba>()?;
+    m.add_class::<Style>()?;
+    m.add_class::<Pen>()?;
+    Ok(())
+}
