@@ -5,7 +5,7 @@ use bitflags::bitflags;
 
 /// RGBA color representation with 8 bit per channel.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
-#[cfg_attr(feature= "pyo3", pyo3::pyclass)]
+#[cfg_attr(feature = "pyo3", pyo3::pyclass)]
 pub struct Rgba {
     pub r: u8,
     pub g: u8,
@@ -26,7 +26,7 @@ impl Default for Rgba {
 /// Line style for node borders and edges.
 /// See [here](https://graphviz.org/docs/attr-types/style/).
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
-#[cfg_attr(feature= "pyo3", pyo3::pyclass)]
+#[cfg_attr(feature = "pyo3", pyo3::pyclass)]
 pub enum Style {
     Dashed,
     Dotted,

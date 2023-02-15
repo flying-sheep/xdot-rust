@@ -8,16 +8,16 @@ mod ops;
 pub mod shapes;
 
 pub use self::draw::Pen;
-use self::shapes::{Shape, PyShape};
+use self::shapes::{PyShape, Shape};
 
 /// A [Shape] together with a [Pen].
 #[derive(Debug, Clone, PartialEq)]
-#[cfg_attr(feature= "pyo3", pyo3::pyclass)]
+#[cfg_attr(feature = "pyo3", pyo3::pyclass)]
 pub struct ShapeDraw {
     pub pen: Pen,
     pub shape: Shape,
 }
-#[cfg(feature= "pyo3")]
+#[cfg(feature = "pyo3")]
 #[pyo3::pymethods]
 impl ShapeDraw {
     #[getter]
@@ -52,11 +52,11 @@ pub fn parse(input: &str) -> Result<Vec<ShapeDraw>, NomError<&str>> {
     Ok(shape_draws)
 }
 
-#[cfg(feature= "pyo3")]
+#[cfg(feature = "pyo3")]
 #[pyo3::pyfunction]
 #[pyo3(name = "parse")]
 pub fn parse_py(input: &str) -> pyo3::PyResult<Vec<ShapeDraw>> {
-    use pyo3::{PyErr, exceptions::PyValueError};
+    use pyo3::{exceptions::PyValueError, PyErr};
 
     parse(input).map_err(|e| PyErr::new::<PyValueError, _>(e.to_string()))
 }

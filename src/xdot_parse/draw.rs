@@ -6,7 +6,7 @@ pub use self::attrs::{FontCharacteristics, Rgba, Style};
 
 /// Stores attributes for lines, shapes, and text, such as color and font.
 #[derive(Debug, Clone, PartialEq)]
-#[cfg_attr(feature= "pyo3", pyo3::pyclass)]
+#[cfg_attr(feature = "pyo3", pyo3::pyclass)]
 pub struct Pen {
     pub color: Rgba,
     pub fill_color: Rgba,
@@ -30,7 +30,7 @@ impl Default for Pen {
     }
 }
 
-#[cfg(feature= "pyo3")]
+#[cfg(feature = "pyo3")]
 #[pyo3::pymodule]
 #[pyo3(name = "draw")]
 pub fn pymodule(_py: pyo3::Python, m: &pyo3::types::PyModule) -> pyo3::PyResult<()> {
