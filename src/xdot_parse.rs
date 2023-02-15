@@ -8,7 +8,7 @@ mod ops;
 pub mod shapes;
 
 pub use self::draw::Pen;
-use self::shapes::{PyShape, Shape};
+use self::shapes::Shape;
 
 /// A [Shape] together with a [Pen].
 #[derive(Debug, Clone, PartialEq)]
@@ -21,8 +21,8 @@ pub struct ShapeDraw {
 #[pyo3::pymethods]
 impl ShapeDraw {
     #[getter]
-    fn get_shape(&self) -> PyShape {
-        PyShape(self.shape.clone())
+    fn get_shape(&self) -> shapes::PyShape {
+        shapes::PyShape(self.shape.clone())
     }
 }
 
