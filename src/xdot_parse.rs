@@ -8,7 +8,7 @@ mod ops;
 pub mod shapes;
 
 pub use self::draw::Pen;
-use self::shapes::Shape;
+use self::shapes::{Shape, PyShape};
 
 /// A [Shape] together with a [Pen].
 #[derive(Debug, Clone, PartialEq)]
@@ -16,6 +16,14 @@ use self::shapes::Shape;
 pub struct ShapeDraw {
     pub pen: Pen,
     pub shape: Shape,
+}
+#[cfg(feature= "pyo3")]
+#[pyo3::pymethods]
+impl ShapeDraw {
+    #[getter]
+    fn get_shape(&self) -> PyShape {
+        PyShape(self.shape.clone())
+    }
 }
 
 /// Parse an `xdot` draw attribute (as defined [here](https://graphviz.org/docs/outputs/canon/#xdot)).

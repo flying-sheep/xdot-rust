@@ -115,7 +115,7 @@ fn parse_op_draw_shape_points(input: &str) -> IResult<&str, Op> {
     ))(input)?;
     let points = Points {
         filled: c == 'P' || c == 'b',
-        typ: match c {
+        r#type: match c {
             'P' | 'p' => PointsType::Polygon,
             'L' => PointsType::Polyline,
             'B' | 'b' => PointsType::BSpline,
@@ -249,7 +249,7 @@ fn test_b_spline() {
             "",
             Points {
                 filled: false,
-                typ: PointsType::BSpline,
+                r#type: PointsType::BSpline,
                 points: vec![(27., 71.7), (27., 60.85), (27., 46.92), (27., 36.1)]
             }
             .into()

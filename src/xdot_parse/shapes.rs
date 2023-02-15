@@ -8,41 +8,9 @@ pub enum Shape {
     Text(Text),
 }
 #[cfg(feature= "pyo3")]
-unsafe impl pyo3::type_object::PyTypeInfo for Shape {
-    type AsRefTarget = pyo3::PyCell<Self>;
-    const NAME: &'static str = "Shape";
-    const MODULE: ::std::option::Option<&'static str> = ::std::option::Option::None;
-    #[inline]
-    fn type_object_raw(py: pyo3::Python<'_>) -> *mut pyo3::ffi::PyTypeObject {
-        use pyo3::type_object::LazyStaticType;
-        static TYPE_OBJECT: LazyStaticType = LazyStaticType::new();
-        TYPE_OBJECT.get_or_init::<Self>(py)
-    }
-}
-#[cfg(feature= "pyo3")]
-impl pyo3::PyClass for Shape {
-    type Frozen = pyo3::pyclass::boolean_struct::False;
-}
-#[cfg(feature= "pyo3")]
-impl pyo3::impl_::pyclass::PyClassImpl for Shape {
-    const DOC: &'static str = "A drawable shape including closed shapes, lines, and text.";
-    const IS_BASETYPE: bool = false;
-    const IS_SUBCLASS: bool = false;
-    type Layout = pyo3::PyCell<Shape>;
-    type BaseType = pyo3::PyAny;
-    type ThreadChecker = pyo3::impl_::pyclass::ThreadCheckerStub<Shape>;
-    type PyClassMutability = <<pyo3::PyAny as pyo3::impl_::pyclass::PyClassBaseType>::PyClassMutability as pyo3::impl_::pycell::PyClassMutability>::MutableChild;
-    type Dict = pyo3::impl_::pyclass::PyClassDummySlot;
-    type WeakRef = pyo3::impl_::pyclass::PyClassDummySlot;
-    type BaseNativeType = pyo3::PyAny;
-
-    fn items_iter() -> pyo3::impl_::pyclass::PyClassItemsIter {
-        use pyo3::impl_::pyclass::*;
-        let collector = PyClassImplCollector::<Shape>::new();
-        static INTRINSIC_ITEMS: PyClassItems = PyClassItems { slots: &[], methods: &[] };
-        PyClassItemsIter::new(&INTRINSIC_ITEMS, collector.py_methods())
-    }
-}
+#[pyo3::pyclass(name = "Shape")]
+pub struct PyShape(pub Shape);
+// TODO: methods
 
 /// A horizontal ellipse shape.
 #[derive(Debug, Clone, PartialEq)]
@@ -73,7 +41,7 @@ pub enum PointsType {
 #[cfg_attr(feature= "pyo3", pyo3::pyclass)]
 pub struct Points {
     pub filled: bool,
-    pub typ: PointsType,
+    pub r#type: PointsType,
     pub points: Vec<(f32, f32)>,
 }
 impl From<Points> for Shape {
@@ -116,7 +84,7 @@ pub struct ExternalImage;
 #[pyo3::pymodule]
 #[pyo3(name = "shapes")]
 pub fn pymodule(_py: pyo3::Python, m: &pyo3::types::PyModule) -> pyo3::PyResult<()> {
-    m.add_class::<Shape>()?;
+    m.add_class::<PyShape>()?;
     m.add_class::<Ellipse>()?;
     m.add_class::<PointsType>()?;
     m.add_class::<Points>()?;
