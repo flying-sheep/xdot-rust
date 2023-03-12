@@ -25,20 +25,16 @@ impl Default for Rgba {
 
 /// Line style for node borders and edges.
 /// See [here](https://graphviz.org/docs/attr-types/style/).
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
 #[cfg_attr(feature = "pyo3", pyo3::pyclass)]
 pub enum Style {
     Dashed,
     Dotted,
+    #[default]
     Solid,
     Invis,
     Bold,
     // TODO: "tapered" for edges only
-}
-impl Default for Style {
-    fn default() -> Self {
-        Style::Solid
-    }
 }
 impl FromStr for Style {
     type Err = String;
