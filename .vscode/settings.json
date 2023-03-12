@@ -1,5 +1,12 @@
 {
     "rust-analyzer.cargo.features": "all",
     "rust-analyzer.check.command": "clippy",
-    "explorer.sortOrder": "mixed"
+    "explorer.sortOrder": "mixed",
+    "[rust]": {
+        "editor.formatOnSave": true,
+    },
+    "[python]": {
+        "editor.formatOnSave": true,
+    },
+    "python.formatting.provider": "black",
 }

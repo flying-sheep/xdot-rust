@@ -10,7 +10,7 @@ mod graph_ext;
 
 use self::graph_ext::{Elem, GraphExt};
 use super::{
-    xdot::{parse, ShapeDraw},
+    xdot_parse::{parse, ShapeDraw},
     ATTR_NAMES,
 };
 

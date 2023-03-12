@@ -12,9 +12,25 @@ use self::shapes::Shape;
 
 /// A [Shape] together with a [Pen].
 #[derive(Debug, Clone, PartialEq)]
+#[cfg_attr(feature = "pyo3", pyo3::pyclass)]
 pub struct ShapeDraw {
     pub pen: Pen,
     pub shape: Shape,
+}
+#[cfg(feature = "pyo3")]
+#[pyo3::pymethods]
+impl ShapeDraw {
+    #[new]
+    fn new(shape: shapes::PyShape, pen: Pen) -> Self {
+        ShapeDraw {
+            shape: shape.0,
+            pen,
+        }
+    }
+    #[getter]
+    fn get_shape(&self) -> shapes::PyShape {
+        shapes::PyShape(self.shape.clone())
+    }
 }
 
 /// Parse an `xdot` draw attribute (as defined [here](https://graphviz.org/docs/outputs/canon/#xdot)).
@@ -41,4 +57,13 @@ pub fn parse(input: &str) -> Result<Vec<ShapeDraw>, NomError<&str>> {
         }
     }
     Ok(shape_draws)
+}
+
+#[cfg(feature = "pyo3")]
+#[pyo3::pyfunction]
+#[pyo3(name = "parse")]
+pub fn parse_py(input: &str) -> pyo3::PyResult<Vec<ShapeDraw>> {
+    use pyo3::{exceptions::PyValueError, PyErr};
+
+    parse(input).map_err(|e| PyErr::new::<PyValueError, _>(e.to_string()))
 }
