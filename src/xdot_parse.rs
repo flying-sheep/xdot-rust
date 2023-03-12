@@ -20,6 +20,13 @@ pub struct ShapeDraw {
 #[cfg(feature = "pyo3")]
 #[pyo3::pymethods]
 impl ShapeDraw {
+    #[new]
+    fn new(shape: shapes::PyShape, pen: Pen) -> Self {
+        ShapeDraw {
+            shape: shape.0,
+            pen,
+        }
+    }
     #[getter]
     fn get_shape(&self) -> shapes::PyShape {
         shapes::PyShape(self.shape.clone())

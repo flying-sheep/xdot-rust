@@ -11,6 +11,11 @@ pub enum Shape {
 #[derive(Debug, Clone, PartialEq)]
 #[pyo3::pyclass(name = "Shape")]
 pub struct PyShape(pub Shape);
+impl From<Shape> for PyShape {
+    fn from(val: Shape) -> Self {
+        PyShape(val)
+    }
+}
 
 /// A horizontal ellipse shape.
 #[derive(Debug, Clone, PartialEq)]
@@ -22,9 +27,24 @@ pub struct Ellipse {
     pub w: f32,
     pub h: f32,
 }
+#[cfg(feature = "pyo3")]
+#[pyo3::pymethods]
+impl Ellipse {
+    #[new]
+    #[pyo3(signature = (x, y, w, h, filled=true))]
+    fn new(x: f32, y: f32, w: f32, h: f32, filled: bool) -> Self {
+        Ellipse { x, y, w, h, filled }
+    }
+}
 impl From<Ellipse> for Shape {
     fn from(val: Ellipse) -> Self {
         Shape::Ellipse(val)
+    }
+}
+#[cfg(feature = "pyo3")]
+impl From<Ellipse> for PyShape {
+    fn from(val: Ellipse) -> Self {
+        Shape::from(val).into()
     }
 }
 
@@ -44,9 +64,28 @@ pub struct Points {
     pub r#type: PointsType,
     pub points: Vec<(f32, f32)>,
 }
+#[cfg(feature = "pyo3")]
+#[pyo3::pymethods]
+impl Points {
+    #[new]
+    #[pyo3(signature = (r#type, points, filled=true))]
+    fn new(r#type: PointsType, points: Vec<(f32, f32)>, filled: bool) -> Self {
+        Points {
+            points,
+            r#type,
+            filled,
+        }
+    }
+}
 impl From<Points> for Shape {
     fn from(val: Points) -> Self {
         Shape::Points(val)
+    }
+}
+#[cfg(feature = "pyo3")]
+impl From<Points> for PyShape {
+    fn from(val: Points) -> Self {
+        Shape::from(val).into()
     }
 }
 
@@ -68,9 +107,29 @@ pub struct Text {
     pub width: f32,
     pub text: String,
 }
+#[cfg(feature = "pyo3")]
+#[pyo3::pymethods]
+impl Text {
+    #[new]
+    fn new(x: f32, y: f32, align: TextAlign, width: f32, text: String) -> Self {
+        Text {
+            x,
+            y,
+            align,
+            width,
+            text,
+        }
+    }
+}
 impl From<Text> for Shape {
     fn from(val: Text) -> Self {
         Shape::Text(val)
+    }
+}
+#[cfg(feature = "pyo3")]
+impl From<Text> for PyShape {
+    fn from(val: Text) -> Self {
+        Shape::from(val).into()
     }
 }
 

@@ -29,6 +29,39 @@ impl Default for Pen {
         }
     }
 }
+#[cfg(feature = "pyo3")]
+#[pyo3::pymethods]
+impl Pen {
+    #[new]
+    #[pyo3(signature = (
+        color=Default::default(),
+        fill_color=Default::default(),
+        line_width=1.0,
+        line_style=Default::default(),
+        font_size=14.0,
+        font_name="Times-Roman".to_owned(),
+        font_characteristics=Default::default(),
+    ))]
+    fn new(
+        color: Rgba,
+        fill_color: Rgba,
+        line_width: f32,
+        line_style: Style,
+        font_size: f32,
+        font_name: String,
+        font_characteristics: FontCharacteristics,
+    ) -> Self {
+        Pen {
+            color,
+            fill_color,
+            line_width,
+            line_style,
+            font_size,
+            font_name,
+            font_characteristics,
+        }
+    }
+}
 
 #[cfg(feature = "pyo3")]
 #[pyo3::pymodule]
