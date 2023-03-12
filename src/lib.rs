@@ -35,12 +35,10 @@ pub static ATTR_NAMES: [&str; 6] = [
 pub fn pymodule(py: pyo3::Python, m: &pyo3::types::PyModule) -> pyo3::PyResult<()> {
     m.add_class::<ShapeDraw>()?;
     m.add_function(pyo3::wrap_pyfunction!(parse_py, m)?)?;
-    let shapes = pyo3::wrap_pymodule!(shapes::pymodule);
-    let draw = pyo3::wrap_pymodule!(draw::pymodule);
     let m_dict = py.import("sys")?.getattr("modules")?;
-    m.add_wrapped(shapes)?;
-    m_dict.set_item("xdot_rs.shapes", shapes(py))?;
-    m.add_wrapped(draw)?;
-    m_dict.set_item("xdot_rs.draw", draw(py))?;
+    m.add_wrapped(pyo3::wrap_pymodule!(shapes::pymodule))?;
+    m_dict.set_item("xdot_rs.shapes", m.getattr("shapes")?)?;
+    m.add_wrapped(pyo3::wrap_pymodule!(draw::pymodule))?;
+    m_dict.set_item("xdot_rs.draw", m.getattr("draw")?)?;
     Ok(())
 }

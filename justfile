@@ -16,7 +16,12 @@ check:
 
 # Runs unit tests
 test:
+    just test-rs
+    just test-py
+test-rs:
     cargo hack --feature-powerset test --locked
+test-py:
+    pytest -v
 
 # Build documentation
 doc:
