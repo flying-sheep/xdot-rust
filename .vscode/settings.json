@@ -5,4 +5,8 @@
     "[rust]": {
         "editor.formatOnSave": true,
     },
+    "[python]": {
+        "editor.formatOnSave": true,
+    },
+    "python.formatting.provider": "black",
 }

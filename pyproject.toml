@@ -18,6 +18,10 @@ requires-python = '>=3.8'
 dependencies = []
 
 [project.optional-dependencies]
+dev = [
+    'pre-commit',  # auto-formatting
+    'black',  # VS Code format on save
+]
 test = [
     'pytest',
 ]
