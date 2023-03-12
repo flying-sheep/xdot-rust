@@ -25,3 +25,10 @@ test = [
 [tool.maturin]
 features = ['pyo3']
 python-modules = ['xdot_rs']
+
+[tool.ruff]
+select = [
+    'E',  # pycodestyle
+    'F',  # pyflakes
+    'I',  # isort
+]
